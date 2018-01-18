@@ -1,0 +1,16 @@
+{
+  "name": "@extractr-io/puphpeteer",
+  "version": "1.0.0",
+  "description": "A Puppeteer bridge for PHP, supporting the full API.",
+  "author": {
+    "name": "Johann Pardanaud",
+    "email": "pardanaud.j@gmail.com",
+    "url": "https://johann.pardanaud.com/"
+  },
+  "license": "MIT",
+  "repository": "github:extractr-io/puphpeteer",
+  "dependencies": {
+    "@extractr-io/rialto": "file:../rialto",
+    "puppeteer": "^1.0.0"
+  }
+}

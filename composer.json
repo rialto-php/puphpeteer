@@ -1,0 +1,27 @@
+{
+    "name": "extractr-io/puphpeteer",
+    "description": "A Puppeteer bridge for PHP, supporting the full API.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johann Pardanaud",
+            "email": "pardanaud.j@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "extractr-io/rialto": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "ExtractrIo\\Puphpeteer\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "npm install"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
