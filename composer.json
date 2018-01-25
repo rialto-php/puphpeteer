@@ -13,13 +13,19 @@
         "php": ">=7.1",
         "extractr-io/rialto": "dev-master"
     },
+    "require-dev": {
+        "codedungeon/phpunit-result-printer": "^0.5.4",
+        "phpunit/phpunit": "^6.5",
+        "symfony/process": "^4.0"
+    },
     "autoload": {
         "psr-4": {
             "ExtractrIo\\Puphpeteer\\": "src/"
         }
     },
     "scripts": {
-        "post-install-cmd": "npm install"
+        "post-install-cmd": "npm install",
+        "test": "./vendor/bin/phpunit"
     },
     "config": {
         "sort-packages": true
