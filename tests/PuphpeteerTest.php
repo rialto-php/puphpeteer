@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use ExtractrIo\Puphpeteer\Puppeteer;
 use ExtractrIo\Rialto\Data\JsFunction;
 use Symfony\Component\Process\Process;
+use ExtractrIo\Puphpeteer\Resources\ElementHandle;
 
 class PuphpeteerTest extends TestCase
 {
@@ -50,10 +51,35 @@ class PuphpeteerTest extends TestCase
 
         $page->goto($this->url);
 
-        $page->querySelector('h1');
-        $page->querySelectorAll('h1');
-        $page->querySelectorEval('h1', JsFunction::create(''));
-        $page->querySelectorAllEval('h1', JsFunction::create(''));
+        $select = function($resource) {
+            $elements = [
+                $resource->querySelector('h1'),
+                $resource->querySelectorAll('h1')[0],
+                $resource->querySelectorXPath('/html/body/h1')[0],
+            ];
+
+            $this->assertContainsOnlyInstancesOf(ElementHandle::class, $elements);
+        };
+
+        $evaluate = function($resource) {
+            $strings = [
+                $resource->querySelectorEval('h1', JsFunction::create('return "Hello World!";')),
+                $resource->querySelectorAllEval('h1', JsFunction::create('return "Hello World!";')),
+            ];
+
+            foreach ($strings as $string) {
+                $this->assertEquals('Hello World!', $string);
+            }
+        };
+
+        // Test method aliases for Page and Frame classes
+        foreach ([$page, $page->mainFrame()] as $resource) {
+            $select($resource);
+            $evaluate($resource);
+        }
+
+        // Test method aliases for the ElementHandle class
+        $select($page->querySelector('body'));
     }
 
     /** @test */

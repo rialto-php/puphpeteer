@@ -16,13 +16,6 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
 
         this.browsers = new Set;
 
-        this.methodAliases = new Map([
-            ['querySelector', '$'],
-            ['querySelectorAll', '$$'],
-            ['querySelectorEval', '$eval'],
-            ['querySelectorAllEval', '$$eval'],
-        ]);
-
         this.addSignalEventListeners();
     }
 
@@ -30,12 +23,7 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
      * @inheritdoc
      */
     async handleInstruction(instruction, responseHandler, errorHandler) {
-        const {methodAliases} = this,
-            instructionName = instruction.name();
-
-        if (methodAliases.has(instructionName)) {
-            instruction.overrideName(methodAliases.get(instructionName));
-        }
+        const instructionName = instruction.name();
 
         instruction.setDefaultResource(puppeteer);
 
