@@ -2,6 +2,15 @@
   "name": "@extractr-io/puphpeteer",
   "version": "1.0.0",
   "description": "A Puppeteer bridge for PHP, supporting the full API.",
+  "keywords": [
+    "php",
+    "puppeteer",
+    "headless-chrome",
+    "testing",
+    "web",
+    "developer-tools",
+    "automation"
+  ],
   "author": {
     "name": "Johann Pardanaud",
     "email": "pardanaud.j@gmail.com",

@@ -1,6 +1,15 @@
 {
     "name": "extractr-io/puphpeteer",
     "description": "A Puppeteer bridge for PHP, supporting the full API.",
+    "keywords": [
+        "php",
+        "puppeteer",
+        "headless-chrome",
+        "testing",
+        "web",
+        "developer-tools",
+        "automation"
+    ],
     "type": "library",
     "license": "MIT",
     "authors": [
