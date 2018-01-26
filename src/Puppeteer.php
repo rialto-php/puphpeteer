@@ -7,16 +7,15 @@ use ExtractrIo\Rialto\AbstractEntryPoint;
 class Puppeteer extends AbstractEntryPoint
 {
     /**
-     * Constructor.
+     * Instanciate Puppeteer's entry point.
      */
-    public function __construct(array $options = [])
+    public function __construct(array $userOptions = [])
     {
-        // Reject the "stop_timeout" option
-        $options = array_diff_key($options, array_flip(['stop_timeout']));
-
-        // Merge the user options with our own defaults
-        $options = array_merge(['read_timeout' => 35], $options);
-
-        $this->createProcess(new PuppeteerProcessDelegate, __DIR__.'/PuppeteerConnectionDelegate.js', $options);
+        parent::__construct(
+            new PuppeteerProcessDelegate,
+            __DIR__.'/PuppeteerConnectionDelegate.js',
+            ['read_timeout' => 35],
+            $userOptions
+        );
     }
 }
