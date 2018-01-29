@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=7.1",
-        "extractr-io/rialto": "dev-master"
+        "extractr-io/rialto": "~0.1.0"
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.5.4",
