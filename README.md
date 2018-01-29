@@ -76,11 +76,11 @@ This will create a new Node process controlled by PHP.
 
 You can also pass some options to the constructor, see [Rialto's documentation](https://github.com/extractr-io/rialto/blob/master/docs/api.md#options).
 
-**Note:** If you use some timeouts higher than 30 seconds in Puppeteer's API, you will have to set a higher value for the `read_timeout` option (default: `35`) in the constructor:
+**Note:** If you use some timeouts higher than 30 seconds in Puppeteer's API, you will have to set a higher value for the `read_timeout` option (default: `35`):
 
 ```php
 $puppeteer = new Puppeteer([
-    'read_timout' => 65, // In seconds
+    'read_timeout' => 65, // In seconds
 ]);
 
 $puppeteer->launch()->newPage()->goto($url, [
@@ -90,11 +90,11 @@ $puppeteer->launch()->newPage()->goto($url, [
 
 ### No need to use the `await` keyword
 
-Every method call or property getting/setting is synchronous with PuPHPeteer.
+With PuPHPeteer, every method call or property getting/setting is synchronous.
 
 ### Evaluated functions must be created with `JsFunction`
 
-Functions evaluated in the context of the page must be written [with the `JsFunction` class](https://github.com/extractr-io/rialto/blob/master/docs/api.md#javascript-functions), the body of these functions must written in JavaScript instead of PHP.
+Functions evaluated in the context of the page must be written [with the `JsFunction` class](https://github.com/extractr-io/rialto/blob/master/docs/api.md#javascript-functions), the body of these functions must be written in JavaScript instead of PHP.
 
 ```php
 use ExtractrIo\Rialto\Data\JsFunction;
@@ -106,7 +106,7 @@ $pageFunction = JsFunction::create(['element'], "
 
 ### Exceptions must be catched with `->tryCatch`
 
-If an error occurs in the context of Node, a `Node\FatalException` will be thrown and the process closed, you will have to create a new instance of `Puppeteer`.
+If an error occurs in Node, a `Node\FatalException` will be thrown and the process closed, you will have to create a new instance of `Puppeteer`.
 
 To avoid that, you can ask Node to catch these errors by prepending your instruction with `->tryCatch`:
 
