@@ -12,8 +12,8 @@ class Puppeteer extends AbstractEntryPoint
     public function __construct(array $userOptions = [])
     {
         parent::__construct(
-            new PuppeteerProcessDelegate,
             __DIR__.'/PuppeteerConnectionDelegate.js',
+            new PuppeteerProcessDelegate,
             ['read_timeout' => 35],
             $userOptions
         );
