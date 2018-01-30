@@ -92,6 +92,22 @@ $puppeteer->launch()->newPage()->goto($url, [
 
 With PuPHPeteer, every method call or property getting/setting is synchronous.
 
+### Some methods have been aliased
+
+The following methods have been aliased because PHP doesn't support the `$` character in method names:
+
+- `$` => `querySelector`
+- `$$` => `querySelectorAll`
+- `$x` => `querySelectorXPath`
+- `$eval` => `querySelectorEval`
+- `$$eval` => `querySelectorAllEval`
+
+Use these aliases just like you would have used the original methods:
+
+```php
+$divs = $page->querySelectorAll('div');
+```
+
 ### Evaluated functions must be created with `JsFunction`
 
 Functions evaluated in the context of the page must be written [with the `JsFunction` class](https://github.com/extractr-io/rialto/blob/master/docs/api.md#javascript-functions), the body of these functions must be written in JavaScript instead of PHP.
