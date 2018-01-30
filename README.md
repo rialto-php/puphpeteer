@@ -1,5 +1,11 @@
 # PuPHPeteer
 
+[![PHP Version](https://img.shields.io/packagist/php-v/extractr-io/puphpeteer.svg?style=flat-square)](http://php.net/)
+[![Composer Version](https://img.shields.io/packagist/v/extractr-io/puphpeteer.svg?style=flat-square&label=Composer)](https://packagist.org/packages/extractr-io/puphpeteer)
+[![Node Version](https://img.shields.io/node/v/@extractr-io/puphpeteer.svg?style=flat-square&label=Node)](https://nodejs.org/)
+[![NPM Version](https://img.shields.io/npm/v/@extractr-io/puphpeteer.svg?style=flat-square&label=NPM)](https://www.npmjs.com/package/@extractr-io/puphpeteer)
+[![Build Status](https://img.shields.io/travis/extractr-io/puphpeteer.svg?style=flat-square&label=Build%20Status)](https://travis-ci.org/extractr-io/puphpeteer)
+
 A [Puppeteer](https://github.com/GoogleChrome/puppeteer/) bridge for PHP, supporting the full API. Based on [Rialto](https://github.com/extractr-io/rialto/), a package to manage Node resources from PHP.
 
 Here are some examples [borrowed from Puppeteer's documentation](https://github.com/GoogleChrome/puppeteer/blob/master/README.md#usage) and adapted to PHP's syntax:
