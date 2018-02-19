@@ -1,6 +1,6 @@
 {
   "name": "@extractr-io/puphpeteer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Puppeteer bridge for PHP, supporting the full API.",
   "keywords": [
     "php",
