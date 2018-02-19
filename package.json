@@ -18,11 +18,11 @@
   },
   "license": "MIT",
   "repository": "github:extractr-io/puphpeteer",
-  "engines" : {
-    "node" : ">=8.0.0"
+  "engines": {
+    "node": ">=8.0.0"
   },
   "dependencies": {
     "@extractr-io/rialto": "~0.1.0",
-    "puppeteer": "^1.0.0"
+    "puppeteer": "~1.1.0"
   }
 }
