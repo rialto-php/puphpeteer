@@ -32,6 +32,11 @@
             "ExtractrIo\\Puphpeteer\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "ExtractrIo\\Puphpeteer\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "post-install-cmd": "npm install",
         "test": "./vendor/bin/phpunit"

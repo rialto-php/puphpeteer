@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests;
+namespace ExtractrIo\Puphpeteer\Tests;
 
-use PHPUnit\Framework\TestCase;
 use ExtractrIo\Puphpeteer\Puppeteer;
 use ExtractrIo\Rialto\Data\JsFunction;
 use Symfony\Component\Process\Process;
@@ -12,6 +11,8 @@ class PuphpeteerTest extends TestCase
 {
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->host = '127.0.0.1:8089';
         $this->url = "http://{$this->host}";
         $this->serverDir = __DIR__.'/resources';
@@ -21,14 +22,18 @@ class PuphpeteerTest extends TestCase
 
         // Chrome doesn't support Linux sandbox on many CI environments
         // See: https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#chrome-headless-fails-due-to-sandbox-issues
-        $options = ['args' => ['--no-sandbox', '--disable-setuid-sandbox']];
+        $this->browserOptions = ['args' => ['--no-sandbox', '--disable-setuid-sandbox']];
 
-        $this->browser = (new Puppeteer)->launch($options);
+        if ($this->canPopulateProperty('browser')) {
+            $this->browser = (new Puppeteer)->launch($this->browserOptions);
+    }
     }
 
     public function tearDown(): void
     {
+        if (isset($this->browser)) {
         $this->browser->close();
+        }
 
         $this->servingProcess->stop(0);
     }
