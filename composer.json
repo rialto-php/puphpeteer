@@ -23,8 +23,8 @@
         "extractr-io/rialto": "~0.1.1"
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": "^0.5.4",
-        "phpunit/phpunit": "^6.5",
+        "codedungeon/phpunit-result-printer": "^0.6.0",
+        "phpunit/phpunit": "^6.5|^7.0",
         "symfony/process": "^4.0"
     },
     "autoload": {
