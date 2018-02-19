@@ -26,13 +26,13 @@ class PuphpeteerTest extends TestCase
 
         if ($this->canPopulateProperty('browser')) {
             $this->browser = (new Puppeteer)->launch($this->browserOptions);
-    }
+        }
     }
 
     public function tearDown(): void
     {
         if (isset($this->browser)) {
-        $this->browser->close();
+            $this->browser->close();
         }
 
         $this->servingProcess->stop(0);
@@ -101,7 +101,6 @@ class PuphpeteerTest extends TestCase
         $this->assertEquals(1, $titleCount);
     }
 
-
     /** @test */
     public function can_intercept_requests()
     {
@@ -120,5 +119,21 @@ class PuphpeteerTest extends TestCase
         "));
 
         $this->assertNotEquals('lowercase', $backgroundColor);
+    }
+
+    /**
+     * @test
+     * @dontPopulateProperties browser
+     */
+    public function check_all_resources_are_supported()
+    {
+        $resourceInstanciator = new ResourceInstanciator($this->browserOptions, $this->url);
+
+        foreach ($resourceInstanciator->getResourceNames() as $name) {
+            $this->assertInstanceOf(
+                "ExtractrIo\\Puphpeteer\\Resources\\$name",
+                $resourceInstanciator->{$name}(new Puppeteer, $this->browserOptions)
+            );
+        }
     }
 }
