@@ -20,7 +20,8 @@
     ],
     "require": {
         "php": ">=7.1",
-        "extractr-io/rialto": "~0.1.2"
+        "extractr-io/rialto": "~0.1.2",
+        "vierbergenlars/php-semver": "^3.0"
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.6.0",
