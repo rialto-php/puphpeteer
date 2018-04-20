@@ -22,8 +22,14 @@ class ResourceInstanciator
             'CDPSession' => function ($puppeteer) {
                 return $this->Target($puppeteer)->createCDPSession();
             },
+            'ConsoleMessage' => function () {
+                return new UntestableResource;
+            },
             'Coverage' => function ($puppeteer) {
                 return $this->Page($puppeteer)->coverage;
+            },
+            'Dialog' => function () {
+                return new UntestableResource;
             },
             'ElementHandle' => function ($puppeteer) {
                 return $this->Page($puppeteer)->querySelector('body');
@@ -53,7 +59,9 @@ class ResourceInstanciator
                 return $this->Page($puppeteer)->goto($this->url);
             },
             'SecurityDetails' => function ($puppeteer) {
-                return $this->Page($puppeteer)->goto('https://example.com')->securityDetails();
+                return new RiskyResource(function () use ($puppeteer) {
+                    return $this->Page($puppeteer)->goto('https://example.com')->securityDetails();
+                });
             },
             'Target' => function ($puppeteer) {
                 return $this->Page($puppeteer)->target();

@@ -5,6 +5,7 @@ namespace ExtractrIo\Puphpeteer\Tests;
 use ExtractrIo\Puphpeteer\Puppeteer;
 use ExtractrIo\Rialto\Data\JsFunction;
 use Symfony\Component\Process\Process;
+use PHPUnit\Framework\ExpectationFailedException;
 use ExtractrIo\Puphpeteer\Resources\ElementHandle;
 
 class PuphpeteerTest extends TestCase
@@ -127,13 +128,51 @@ class PuphpeteerTest extends TestCase
      */
     public function check_all_resources_are_supported()
     {
+        $incompleteResources = [];
         $resourceInstanciator = new ResourceInstanciator($this->browserOptions, $this->url);
 
         foreach ($resourceInstanciator->getResourceNames() as $name) {
-            $this->assertInstanceOf(
-                "ExtractrIo\\Puphpeteer\\Resources\\$name",
-                $resourceInstanciator->{$name}(new Puppeteer, $this->browserOptions)
-            );
+            $resource = $resourceInstanciator->{$name}(new Puppeteer, $this->browserOptions);
+
+            if ($resource instanceof UntestableResource) {
+                $incompleteResources[$name] = $resource;
+            } else if ($resource instanceof RiskyResource) {
+                if (!empty($resource->exception())) {
+                    $incompleteResources[$name] = $resource;
+                } else {
+                    try {
+                        $this->assertInstanceOf("ExtractrIo\\Puphpeteer\\Resources\\$name", $resource->value());
+                    } catch (ExpectationFailedException $exception) {
+                        $incompleteResources[$name] = $resource;
+                    }
+                }
+            } else {
+                $this->assertInstanceOf("ExtractrIo\\Puphpeteer\\Resources\\$name", $resource);
+            }
         }
+
+        if (empty($incompleteResources)) return;
+
+        $incompleteText = "The following resources have not been tested properly, probably"
+            ." for good reasons but you might want to have a look:";
+
+        foreach ($incompleteResources as $name => $resource) {
+            if ($resource instanceof UntestableResource) {
+                $reason = "Marked as untestable";
+            } else if ($resource instanceof RiskyResource) {
+                if (!empty($exception = $resource->exception())) {
+                    $reason = "Marked as risky because of a Node error: {$exception->getMessage()}";
+                } else {
+                    $value = print_r($resource->value(), true);
+                    $reason = "Marked as risky because of an unexpected value: $value";
+                }
+            } else {
+                $reason = "Unknow reason";
+            }
+
+            $incompleteText .= "\n  • $name - $reason";
+        }
+
+        $this->markTestIncomplete($incompleteText);
     }
 }
