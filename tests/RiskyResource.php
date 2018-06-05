@@ -1,6 +1,6 @@
 <?php
 
-namespace ExtractrIo\Puphpeteer\Tests;
+namespace Nesk\Puphpeteer\Tests;
 
 use Nesk\Rialto\Exceptions\Node\FatalException as NodeFatalException;
 

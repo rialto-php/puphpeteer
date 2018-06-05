@@ -1,12 +1,12 @@
 <?php
 
-namespace ExtractrIo\Puphpeteer\Tests;
+namespace Nesk\Puphpeteer\Tests;
 
-use ExtractrIo\Puphpeteer\Puppeteer;
+use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 use Symfony\Component\Process\Process;
 use PHPUnit\Framework\ExpectationFailedException;
-use ExtractrIo\Puphpeteer\Resources\ElementHandle;
+use Nesk\Puphpeteer\Resources\ElementHandle;
 
 class PuphpeteerTest extends TestCase
 {
@@ -141,13 +141,13 @@ class PuphpeteerTest extends TestCase
                     $incompleteResources[$name] = $resource;
                 } else {
                     try {
-                        $this->assertInstanceOf("ExtractrIo\\Puphpeteer\\Resources\\$name", $resource->value());
+                        $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource->value());
                     } catch (ExpectationFailedException $exception) {
                         $incompleteResources[$name] = $resource;
                     }
                 }
             } else {
-                $this->assertInstanceOf("ExtractrIo\\Puphpeteer\\Resources\\$name", $resource);
+                $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource);
             }
         }
 

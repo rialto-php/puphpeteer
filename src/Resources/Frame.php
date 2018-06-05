@@ -1,10 +1,10 @@
 <?php
 
-namespace ExtractrIo\Puphpeteer\Resources;
+namespace Nesk\Puphpeteer\Resources;
 
 use Nesk\Rialto\Data\BasicResource;
-use ExtractrIo\Puphpeteer\Traits\AliasesSelectionMethods;
-use ExtractrIo\Puphpeteer\Traits\AliasesEvaluationMethods;
+use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
+use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
 
 class Frame extends BasicResource
 {

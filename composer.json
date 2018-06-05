@@ -1,5 +1,5 @@
 {
-    "name": "extractr-io/puphpeteer",
+    "name": "nesk/puphpeteer",
     "description": "A Puppeteer bridge for PHP, supporting the full API.",
     "keywords": [
         "php",
@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ExtractrIo\\Puphpeteer\\": "src/"
+            "Nesk\\Puphpeteer\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ExtractrIo\\Puphpeteer\\Tests\\": "tests/"
+            "Nesk\\Puphpeteer\\Tests\\": "tests/"
         }
     },
     "scripts": {

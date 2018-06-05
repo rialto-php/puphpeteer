@@ -1,6 +1,6 @@
 <?php
 
-namespace ExtractrIo\Puphpeteer\Traits;
+namespace Nesk\Puphpeteer\Traits;
 
 trait AliasesSelectionMethods
 {

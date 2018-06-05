@@ -1,6 +1,6 @@
 <?php
 
-namespace ExtractrIo\Puphpeteer;
+namespace Nesk\Puphpeteer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
