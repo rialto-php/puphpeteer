@@ -22,7 +22,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "@extractr-io/rialto": "~0.1.2",
-    "puppeteer": "~1.3.0"
+    "@nesk/rialto": "^1.0.0",
+    "puppeteer": "~1.4.0"
   }
 }

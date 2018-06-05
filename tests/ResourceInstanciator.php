@@ -2,7 +2,7 @@
 
 namespace ExtractrIo\Puphpeteer\Tests;
 
-use ExtractrIo\Rialto\Data\JsFunction;
+use Nesk\Rialto\Data\JsFunction;
 
 class ResourceInstanciator
 {

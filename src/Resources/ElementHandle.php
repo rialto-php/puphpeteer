@@ -2,7 +2,7 @@
 
 namespace ExtractrIo\Puphpeteer\Resources;
 
-use ExtractrIo\Rialto\Data\BasicResource;
+use Nesk\Rialto\Data\BasicResource;
 use ExtractrIo\Puphpeteer\Traits\AliasesSelectionMethods;
 
 class ElementHandle extends BasicResource

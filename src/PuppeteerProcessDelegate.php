@@ -2,8 +2,8 @@
 
 namespace ExtractrIo\Puphpeteer;
 
-use ExtractrIo\Rialto\Traits\UsesBasicResourceAsDefault;
-use ExtractrIo\Rialto\Interfaces\ShouldHandleProcessDelegation;
+use Nesk\Rialto\Traits\UsesBasicResourceAsDefault;
+use Nesk\Rialto\Interfaces\ShouldHandleProcessDelegation;
 
 class PuppeteerProcessDelegate implements ShouldHandleProcessDelegation
 {

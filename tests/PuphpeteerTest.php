@@ -3,7 +3,7 @@
 namespace ExtractrIo\Puphpeteer\Tests;
 
 use ExtractrIo\Puphpeteer\Puppeteer;
-use ExtractrIo\Rialto\Data\JsFunction;
+use Nesk\Rialto\Data\JsFunction;
 use Symfony\Component\Process\Process;
 use PHPUnit\Framework\ExpectationFailedException;
 use ExtractrIo\Puphpeteer\Resources\ElementHandle;

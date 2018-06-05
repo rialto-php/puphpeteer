@@ -2,7 +2,7 @@
 
 const puppeteer = require('puppeteer'),
     Browser = require('puppeteer/lib/Browser'),
-    {ConnectionDelegate} = require('@extractr-io/rialto');
+    {ConnectionDelegate} = require('@nesk/rialto');
 
 /**
  * Handle the requests of a connection to control Puppeteer.

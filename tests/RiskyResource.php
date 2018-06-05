@@ -2,7 +2,7 @@
 
 namespace ExtractrIo\Puphpeteer\Tests;
 
-use ExtractrIo\Rialto\Exceptions\Node\FatalException as NodeFatalException;
+use Nesk\Rialto\Exceptions\Node\FatalException as NodeFatalException;
 
 class RiskyResource
 {

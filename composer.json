@@ -20,11 +20,11 @@
     ],
     "require": {
         "php": ">=7.1",
-        "extractr-io/rialto": "~0.1.2",
+        "nesk/rialto": "^1.0.0",
         "vierbergenlars/php-semver": "^3.0"
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": "^0.6.0",
+        "codedungeon/phpunit-result-printer": "^0.19.10",
         "phpunit/phpunit": "^6.5|^7.0",
         "symfony/process": "^4.0"
     },

@@ -29,7 +29,7 @@ $browser->close();
 
 ```php
 use ExtractrIo\Puphpeteer\Puppeteer;
-use ExtractrIo\Rialto\Data\JsFunction;
+use Nesk\Rialto\Data\JsFunction;
 
 $puppeteer = new Puppeteer;
 
@@ -119,7 +119,7 @@ $divs = $page->querySelectorAll('div');
 Functions evaluated in the context of the page must be written [with the `JsFunction` class](https://github.com/extractr-io/rialto/blob/master/docs/api.md#javascript-functions), the body of these functions must be written in JavaScript instead of PHP.
 
 ```php
-use ExtractrIo\Rialto\Data\JsFunction;
+use Nesk\Rialto\Data\JsFunction;
 
 $pageFunction = JsFunction::create(['element'], "
     return element.textContent;
@@ -133,7 +133,7 @@ If an error occurs in Node, a `Node\FatalException` will be thrown and the proce
 To avoid that, you can ask Node to catch these errors by prepending your instruction with `->tryCatch`:
 
 ```php
-use ExtractrIo\Rialto\Exceptions\Node;
+use Nesk\Rialto\Exceptions\Node;
 
 try {
     $page->tryCatch->goto('invalid_url');

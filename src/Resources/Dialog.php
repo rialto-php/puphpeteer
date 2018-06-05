@@ -2,7 +2,7 @@
 
 namespace ExtractrIo\Puphpeteer\Resources;
 
-use ExtractrIo\Rialto\Data\BasicResource;
+use Nesk\Rialto\Data\BasicResource;
 
 class Dialog extends BasicResource
 {

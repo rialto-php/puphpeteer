@@ -4,7 +4,7 @@ namespace ExtractrIo\Puphpeteer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
-use ExtractrIo\Rialto\AbstractEntryPoint;
+use Nesk\Rialto\AbstractEntryPoint;
 use vierbergenlars\SemVer\{version, expression, SemVerException};
 
 class Puppeteer extends AbstractEntryPoint
