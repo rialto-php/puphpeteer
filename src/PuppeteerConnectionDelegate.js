@@ -1,7 +1,7 @@
 'use strict';
 
 const puppeteer = require('puppeteer'),
-    Browser = require('puppeteer/lib/Browser'),
+    {Browser} = require('puppeteer/lib/Browser'),
     {ConnectionDelegate} = require('@nesk/rialto');
 
 /**
