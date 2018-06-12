@@ -16,6 +16,9 @@ class ResourceInstanciator
             'Browser' => function ($puppeteer) {
                 return $puppeteer->launch($this->browserOptions);
             },
+            'BrowserContext' => function ($puppeteer) {
+                return $this->Browser($puppeteer)->createIncognitoBrowserContext();
+            },
             'BrowserFetcher' => function ($puppeteer) {
                 return $puppeteer->createBrowserFetcher();
             },
@@ -71,6 +74,11 @@ class ResourceInstanciator
             },
             'Tracing' => function ($puppeteer) {
                 return $this->Page($puppeteer)->tracing;
+            },
+            'Worker' => function ($puppeteer) {
+                $page = $this->Page($puppeteer);
+                $page->goto($this->url, ['waitUntil' => 'networkidle0']);
+                return $page->workers()[0];
             },
         ];
     }
