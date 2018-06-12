@@ -78,14 +78,12 @@ class PuphpeteerTest extends TestCase
             }
         };
 
-        // Test method aliases for Page and Frame classes
-        foreach ([$page, $page->mainFrame()] as $resource) {
+        // Test method aliases for Page, Frame and ElementHandle classes
+        $resources = [$page, $page->mainFrame(), $page->querySelector('body')];
+        foreach ($resources as $resource) {
             $select($resource);
             $evaluate($resource);
         }
-
-        // Test method aliases for the ElementHandle class
-        $select($page->querySelector('body'));
     }
 
     /** @test */
