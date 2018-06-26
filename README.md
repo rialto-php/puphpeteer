@@ -1,5 +1,7 @@
 # PuPHPeteer
 
+<img src="https://user-images.githubusercontent.com/817508/41925638-6f1b9dde-796d-11e8-8f87-3646f0c89750.png" style="max-width:100%;" width="190px" align="right">
+
 [![PHP Version](https://img.shields.io/packagist/php-v/nesk/puphpeteer.svg?style=flat-square)](http://php.net/)
 [![Composer Version](https://img.shields.io/packagist/v/nesk/puphpeteer.svg?style=flat-square&label=Composer)](https://packagist.org/packages/nesk/puphpeteer)
 [![Node Version](https://img.shields.io/node/v/@nesk/puphpeteer.svg?style=flat-square&label=Node)](https://nodejs.org/)
@@ -147,3 +149,12 @@ Instead, a `Node\Exception` will be thrown, the Node process will stay alive and
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
+## Logo attribution
+
+PuPHPeteer's logo is composed of:
+
+- [Puppet](https://thenounproject.com/search/?q=puppet&i=52120) by Luis Prado from [the Noun Project](http://thenounproject.com/).
+- [Elephant](https://thenounproject.com/search/?q=elephant&i=954119) by Lluisa Iborra from [the Noun Project](http://thenounproject.com/).
+
+Thanks to [Laravel News](https://laravel-news.com/) for picking the icons and colors of the logo.
