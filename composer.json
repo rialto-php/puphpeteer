@@ -1,6 +1,6 @@
 {
     "name": "nesk/puphpeteer",
-    "description": "A Puppeteer bridge for PHP, supporting the full API.",
+    "description": "A Puppeteer bridge for PHP, supporting the entire API.",
     "keywords": [
         "php",
         "puppeteer",

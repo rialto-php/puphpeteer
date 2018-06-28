@@ -8,7 +8,7 @@
 [![NPM Version](https://img.shields.io/npm/v/@nesk/puphpeteer.svg?style=flat-square&label=NPM)](https://www.npmjs.com/package/@nesk/puphpeteer)
 [![Build Status](https://img.shields.io/travis/nesk/puphpeteer.svg?style=flat-square&label=Build%20Status)](https://travis-ci.org/nesk/puphpeteer)
 
-A [Puppeteer](https://github.com/GoogleChrome/puppeteer/) bridge for PHP, supporting the full API. Based on [Rialto](https://github.com/nesk/rialto/), a package to manage Node resources from PHP.
+A [Puppeteer](https://github.com/GoogleChrome/puppeteer/) bridge for PHP, supporting the entire API. Based on [Rialto](https://github.com/nesk/rialto/), a package to manage Node resources from PHP.
 
 Here are some examples [borrowed from Puppeteer's documentation](https://github.com/GoogleChrome/puppeteer/blob/master/README.md#usage) and adapted to PHP's syntax:
 

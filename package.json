@@ -1,7 +1,7 @@
 {
   "name": "@nesk/puphpeteer",
   "version": "1.1.0",
-  "description": "A Puppeteer bridge for PHP, supporting the full API.",
+  "description": "A Puppeteer bridge for PHP, supporting the entire API.",
   "keywords": [
     "php",
     "puppeteer",
