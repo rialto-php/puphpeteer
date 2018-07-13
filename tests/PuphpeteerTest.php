@@ -49,7 +49,6 @@ class PuphpeteerTest extends TestCase
 
     /**
      * @test
-     * @doesNotPerformAssertions
      */
     public function can_use_method_aliases()
     {
