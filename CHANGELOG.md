@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+**Note:** PuPHPeteer is heavily based on [Rialto](https://github.com/nesk/rialto). For a complete overview of the changes, you might want to check out [Rialto's changelog](https://github.com/nesk/rialto/blob/master/CHANGELOG.md) too.
+
 ## [Unreleased]
 ### Added
 - Support Puppeteer v1.6
