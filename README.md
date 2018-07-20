@@ -40,7 +40,7 @@ $page = $browser->newPage();
 $page->goto('https://example.com');
 
 // Get the "viewport" of the page, as reported by the page.
-$dimensions = $page->evaluate(JsFunction::create("
+$dimensions = $page->evaluate(JsFunction::createWithBody("
     return {
         width: document.documentElement.clientWidth,
         height: document.documentElement.clientHeight,
@@ -123,9 +123,8 @@ Functions evaluated in the context of the page must be written [with the `JsFunc
 ```php
 use Nesk\Rialto\Data\JsFunction;
 
-$pageFunction = JsFunction::create(['element'], "
-    return element.textContent;
-");
+$pageFunction = JsFunction::createWithParameters(['element'])
+    ->body("return element.textContent");
 ```
 
 ### Exceptions must be catched with `->tryCatch`
