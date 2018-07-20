@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=7.1",
-        "nesk/rialto": "^1.0.0",
+        "nesk/rialto": "^1.1.0",
         "vierbergenlars/php-semver": "^3.0"
     },
     "require-dev": {
