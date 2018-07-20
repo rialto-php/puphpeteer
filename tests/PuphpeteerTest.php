@@ -68,8 +68,8 @@ class PuphpeteerTest extends TestCase
 
         $evaluate = function($resource) {
             $strings = [
-                $resource->querySelectorEval('h1', JsFunction::create('return "Hello World!";')),
-                $resource->querySelectorAllEval('h1', JsFunction::create('return "Hello World!";')),
+                $resource->querySelectorEval('h1', JsFunction::createWithBody('return "Hello World!";')),
+                $resource->querySelectorAllEval('h1', JsFunction::createWithBody('return "Hello World!";')),
             ];
 
             foreach ($strings as $string) {
@@ -92,8 +92,11 @@ class PuphpeteerTest extends TestCase
 
         $page->goto($this->url);
 
-        $title = $page->querySelectorEval('h1', JsFunction::create(['node'], 'return node.textContent;'));
-        $titleCount = $page->querySelectorAllEval('h1', JsFunction::create(['nodes'], 'return nodes.length;'));
+        $title = $page->querySelectorEval('h1', JsFunction::createWithParameters(['node'])
+            ->body('return node.textContent;'));
+
+        $titleCount = $page->querySelectorAllEval('h1', JsFunction::createWithParameters(['nodes'])
+            ->body('return nodes.length;'));
 
         $this->assertEquals('Example Page', $title);
         $this->assertEquals(1, $titleCount);
@@ -106,15 +109,13 @@ class PuphpeteerTest extends TestCase
 
         $page->setRequestInterception(true);
 
-        $page->on('request', JsFunction::create(['request'], "
-            request.resourceType() === 'stylesheet' ? request.abort() : request.continue()
-        "));
+        $page->on('request', JsFunction::createWithParameters(['request'])
+            ->body('request.resourceType() === "stylesheet" ? request.abort() : request.continue()'));
 
         $page->goto($this->url);
 
-        $backgroundColor = $page->querySelectorEval('h1', JsFunction::create(['node'], "
-            return getComputedStyle(node).textTransform;
-        "));
+        $backgroundColor = $page->querySelectorEval('h1', JsFunction::createWithParameters(['node'])
+            ->body('return getComputedStyle(node).textTransform'));
 
         $this->assertNotEquals('lowercase', $backgroundColor);
     }

@@ -44,7 +44,7 @@ class ResourceInstanciator
                 return $this->Page($puppeteer)->mainFrame();
             },
             'JSHandle' => function ($puppeteer) {
-                return $this->Page($puppeteer)->evaluateHandle(JsFunction::create('window'));
+                return $this->Page($puppeteer)->evaluateHandle(JsFunction::createWithBody('window'));
             },
             'Keyboard' => function ($puppeteer) {
                 return $this->Page($puppeteer)->keyboard;
