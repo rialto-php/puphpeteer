@@ -1,3 +1,5 @@
+'use strict';
+
 function output(value) {
     process.stdout.write(JSON.stringify(value));
 }
