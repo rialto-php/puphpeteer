@@ -21,7 +21,7 @@
     "require": {
         "php": ">=7.1",
         "nesk/rialto": "^1.2.0",
-        "vierbergenlars/php-semver": "^3.0"
+        "vierbergenlars/php-semver": "^3.0.2"
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": ">=0.6 <1.0",
