@@ -1,18 +1,25 @@
 'use strict';
 
 const puppeteer = require('puppeteer'),
+    Page = require('puppeteer/lib/Page'),
     {Browser} = require('puppeteer/lib/Browser'),
-    {ConnectionDelegate} = require('@nesk/rialto');
+    {ConnectionDelegate} = require('@nesk/rialto'),
+    Logger = require('@nesk/rialto/src/node-process/Logger'),
+    ConsoleInterceptor = require('@nesk/rialto/src/node-process/NodeInterceptors/ConsoleInterceptor'),
+    StandardStreamsInterceptor = require('@nesk/rialto/src/node-process/NodeInterceptors/StandardStreamsInterceptor');
 
 /**
  * Handle the requests of a connection to control Puppeteer.
  */
-class PuppeteerConnectionDelegate extends ConnectionDelegate {
+class PuppeteerConnectionDelegate extends ConnectionDelegate
+{
     /**
      * Constructor.
+     *
+     * @param  {Object} options
      */
-    constructor() {
-        super();
+    constructor(options) {
+        super(options);
 
         this.browsers = new Set;
 
@@ -23,8 +30,6 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
      * @inheritdoc
      */
     async handleInstruction(instruction, responseHandler, errorHandler) {
-        const instructionName = instruction.name();
-
         instruction.setDefaultResource(puppeteer);
 
         let value = null;
@@ -43,7 +48,35 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
             this.browsers.add(value);
         }
 
+        if (this.options.log_browser_console === true && value instanceof Page) {
+            value.on('console', this.logConsoleMessage);
+        }
+
         responseHandler(value);
+    }
+
+    /**
+     * Log the console message.
+     *
+     * @param {ConsoleMessage} consoleMessage
+     */
+    async logConsoleMessage(consoleMessage) {
+        const type = consoleMessage.type();
+
+        if (!ConsoleInterceptor.typeIsSupported(type)) {
+            return;
+        }
+
+        const level = ConsoleInterceptor.getLevelFromType(type);
+        const args = await Promise.all(consoleMessage.args().map(arg => arg.jsonValue()));
+
+        StandardStreamsInterceptor.startInterceptingStrings(message => {
+            Logger.log('Browser', level, ConsoleInterceptor.formatMessage(message));
+        });
+
+        ConsoleInterceptor.originalConsole[type](...args);
+
+        StandardStreamsInterceptor.stopInterceptingStrings();
     }
 
     /**

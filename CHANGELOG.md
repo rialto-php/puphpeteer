@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 **Note:** PuPHPeteer is heavily based on [Rialto](https://github.com/nesk/rialto). For a complete overview of the changes, you might want to check out [Rialto's changelog](https://github.com/nesk/rialto/blob/master/CHANGELOG.md) too.
 
 ## [Unreleased]
-_In progress…_
+### Added
+- Add a `log_browser_console` option to log the output of Browser's console methods (`console.log`, `console.debug`, `console.table`, etc…) to the PHP logger
 
 ## [1.2.0] - 2018-07-25
 ### Added
