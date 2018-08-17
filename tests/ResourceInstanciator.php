@@ -69,6 +69,9 @@ class ResourceInstanciator
             'Target' => function ($puppeteer) {
                 return $this->Page($puppeteer)->target();
             },
+            'TimeoutError' => function () {
+                return new UntestableResource;
+            },
             'Touchscreen' => function ($puppeteer) {
                 return $this->Page($puppeteer)->touchscreen;
             },
