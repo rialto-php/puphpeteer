@@ -40,11 +40,16 @@ And provide a Monolog instance to the `Puppeteer` constructor:
 
 - $puppeteer = new Puppeteer;
 + $logPath = 'path/to/your.log';
-+ 
++
 + $logger = new \Monolog\Logger('PuPHPeteer');
 + $logger->pushHandler(new \Monolog\Handler\StreamHandler($logPath, \Monolog\Logger::DEBUG));
-+ 
-+ $puppeteer = new Puppeteer(['logger' => $logger]);
++
++ $puppeteer = new Puppeteer([
++     'logger' => $logger,
++     'log_node_console' => true,
++     'log_browser_console' => true,
++ ]);
++
   $browser = $puppeteer->launch();
   $browser->newPage()->goto('https://example.com');
   $browser->close();
@@ -53,9 +58,10 @@ And provide a Monolog instance to the `Puppeteer` constructor:
 Execute your code and `path/to/your.log` will contain the generated logs, here's an example of what you can get and provide in your bug report:
 
 ```
-[2018-06-07 12:41:19] PuPHPeteer.DEBUG: [options] {"read_timeout":35,"logger":{}} [] []
-[2018-06-07 12:41:19] PuPHPeteer.DEBUG: Starting process... [] []
-[2018-06-07 12:41:19] PuPHPeteer.DEBUG: [PID 15547] Process started [] []
-[2018-06-07 12:41:20] PuPHPeteer.DEBUG: [PORT 61118] [sending] {"type":"call","name":"launch","catched":false,"value":[]} [] []
-[2018-06-07 12:41:20] PuPHPeteer.DEBUG: [PORT 61118] [receiving] {"__rialto_resource__":true,"class_name":"Browser","id":"1528375280340.2676"} [] []
+[2018-08-17 10:26:01] PuPHPeteer.INFO: Applying options... {"options":{"read_timeout":30,"log_browser_console":true,"logger":"[object] (Monolog\\Logger: {})","log_node_console":true}} []
+[2018-08-17 10:26:01] PuPHPeteer.DEBUG: Options applied and merged with defaults {"options":{"executable_path":"node","idle_timeout":60,"read_timeout":30,"stop_timeout":3,"logger":"[object] (Monolog\\Logger: {})","log_node_console":true,"debug":false,"log_browser_console":true}} []
+[2018-08-17 10:26:01] PuPHPeteer.INFO: Starting process with command line: 'node' '/Users/johann/Development/puphpeteer/node_modules/@nesk/rialto/src/node-process/serve.js' '/Users/johann/Development/puphpeteer/src/PuppeteerConnectionDelegate.js' '{"idle_timeout":60,"log_node_console":true,"log_browser_console":true}' {"commandline":"'node' '/Users/johann/Development/puphpeteer/node_modules/@nesk/rialto/src/node-process/serve.js' '/Users/johann/Development/puphpeteer/src/PuppeteerConnectionDelegate.js' '{\"idle_timeout\":60,\"log_node_console\":true,\"log_browser_console\":true}'"} []
+[2018-08-17 10:26:01] PuPHPeteer.INFO: Process started with PID 18153 {"pid":18153} []
+[2018-08-17 10:26:01] PuPHPeteer.DEBUG: Sending an instruction to the port 59621... {"pid":18153,"port":59621,"instruction":{"type":"call","name":"launch","catched":false,"value":[]}} []
+[2018-08-17 10:26:01] PuPHPeteer.DEBUG: Received data from the port 59621... {"pid":18153,"port":59621,"data":"[object] (Nesk\\Puphpeteer\\Resources\\Browser: {\"__rialto_resource__\":true,\"class_name\":\"Browser\",\"id\":\"1534501561533.8093\"})"} []
 ```
