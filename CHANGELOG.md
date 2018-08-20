@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 **Note:** PuPHPeteer is heavily based on [Rialto](https://github.com/nesk/rialto). For a complete overview of the changes, you might want to check out [Rialto's changelog](https://github.com/nesk/rialto/blob/master/CHANGELOG.md) too.
 
 ## [Unreleased]
+_In progress…_
+
+## [1.3.0] - 2018-08-20
 ### Added
 - Add a `log_browser_console` option to log the output of Browser's console methods (`console.log`, `console.debug`, `console.table`, etc…) to the PHP logger
 - Support Puppeteer v1.7
@@ -64,7 +67,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 First release
 
 
-[Unreleased]: https://github.com/nesk/puphpeteer/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/nesk/puphpeteer/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/nesk/puphpeteer/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/nesk/puphpeteer/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/nesk/puphpeteer/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/nesk/puphpeteer/compare/0.2.2...1.0.0
