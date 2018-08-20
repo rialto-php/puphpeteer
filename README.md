@@ -1,4 +1,4 @@
-# PuPHPeteer
+# PuPHPeteer <a href="#support-me"><img src="https://beerpay.io/nesk/puphpeteer/badge.svg" alt="Beerpay" align="right"></a>
 
 <img src="https://user-images.githubusercontent.com/817508/41925638-6f1b9dde-796d-11e8-8f87-3646f0c89750.png" style="max-width:100%;" width="190px" align="right">
 
@@ -168,3 +168,9 @@ PuPHPeteer's logo is composed of:
 - [Elephant](https://thenounproject.com/search/?q=elephant&i=954119) by Lluisa Iborra from [the Noun Project](http://thenounproject.com/).
 
 Thanks to [Laravel News](https://laravel-news.com/) for picking the icons and colors of the logo.
+
+## Support me
+
+PuPHPeteer is a project requiring a lot of work (especially with [Rialto](https://github.com/nesk/rialto)). While I'm happy to work on it on my free time, I also enjoy to drink a couple of beers sometimes with my friends. If you want to support development, buy me a beer at [BeerPay](https://beerpay.io/nesk/puphpeteer). 🙏
+
+[![Beerpay](https://beerpay.io/nesk/puphpeteer/badge.svg)](https://beerpay.io/nesk/puphpeteer)
