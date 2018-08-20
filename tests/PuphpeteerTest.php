@@ -173,4 +173,30 @@ class PuphpeteerTest extends TestCase
 
         $this->markTestIncomplete($incompleteText);
     }
+
+    /**
+     * @test
+     * @dontPopulateProperties browser
+     */
+    public function browser_console_calls_are_logged()
+    {
+        $setups = [
+            [false, 'Received data from the port'],
+            [true, 'Received a Browser log:'],
+        ];
+
+        foreach ($setups as [$logBrowserConsole, $startsWith]) {
+            $puppeteer = new Puppeteer([
+                'log_browser_console' => $logBrowserConsole,
+                'logger' => $this->loggerMock(
+                    $this->at(9),
+                    $this->isLogLevel(),
+                    $this->stringStartsWith($startsWith)
+                ),
+            ]);
+
+            $this->browser = $puppeteer->launch($this->browserOptions);
+            $this->browser->newPage()->goto($this->url);
+        }
+    }
 }

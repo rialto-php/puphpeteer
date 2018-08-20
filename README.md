@@ -82,9 +82,19 @@ $puppeteer = new Puppeteer;
 
 This will create a new Node process controlled by PHP.
 
-You can also pass some options to the constructor, see [Rialto's documentation](https://github.com/nesk/rialto/blob/master/docs/api.md#options).
+You can also pass some options to the constructor, see [Rialto's documentation](https://github.com/nesk/rialto/blob/master/docs/api.md#options). PuPHPeteer also extends these options:
 
-**Note:** If you use some timeouts higher than 30 seconds in Puppeteer's API, you will have to set a higher value for the `read_timeout` option (default: `35`):
+```php
+[
+    // Logs the output of Browser's console methods (console.log, console.debug, etc...) to the PHP logger
+    'log_browser_console' => false,
+]
+```
+
+<details>
+<summary><strong>⏱ Want to use some timeouts higher than 30 seconds in Puppeteer's API?</strong></summary> <br>
+
+If you use some timeouts higher than 30 seconds, you will have to set a higher value for the `read_timeout` option (default: `35`):
 
 ```php
 $puppeteer = new Puppeteer([
@@ -95,6 +105,7 @@ $puppeteer->launch()->newPage()->goto($url, [
     'timeout' => 60000, // In milliseconds
 ]);
 ```
+</details>
 
 ### No need to use the `await` keyword
 

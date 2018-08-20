@@ -10,6 +10,18 @@ use vierbergenlars\SemVer\{version, expression, SemVerException};
 class Puppeteer extends AbstractEntryPoint
 {
     /**
+     * Default options.
+     *
+     * @var array
+     */
+    protected $options = [
+        'read_timeout' => 30,
+
+        // Logs the output of Browser's console methods (console.log, console.debug, etc...) to the PHP logger
+        'log_browser_console' => false,
+    ];
+
+    /**
      * Instanciate Puppeteer's entry point.
      */
     public function __construct(array $userOptions = [])
@@ -21,7 +33,7 @@ class Puppeteer extends AbstractEntryPoint
         parent::__construct(
             __DIR__.'/PuppeteerConnectionDelegate.js',
             new PuppeteerProcessDelegate,
-            ['read_timeout' => 35],
+            $this->options,
             $userOptions
         );
     }

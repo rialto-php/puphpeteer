@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Add a `log_browser_console` option to log the output of Browser's console methods (`console.log`, `console.debug`, `console.table`, etc…) to the PHP logger
 - Support Puppeteer v1.7
 
 ## [1.2.0] - 2018-07-25
