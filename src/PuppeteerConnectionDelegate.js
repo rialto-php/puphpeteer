@@ -1,8 +1,6 @@
 'use strict';
 
 const puppeteer = require('puppeteer'),
-    {Page} = require('puppeteer/lib/Page'),
-    {Browser} = require('puppeteer/lib/Browser'),
     {ConnectionDelegate} = require('@nesk/rialto'),
     Logger = require('@nesk/rialto/src/node-process/Logger'),
     ConsoleInterceptor = require('@nesk/rialto/src/node-process/NodeInterceptors/ConsoleInterceptor'),
@@ -44,7 +42,7 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate
             throw error;
         }
 
-        if (value instanceof Browser) {
+        if (this.isInstanceOf(value, 'Browser')) {
             this.browsers.add(value);
 
             if (this.options.log_browser_console === true) {
@@ -53,7 +51,7 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate
             }
         }
 
-        if (this.options.log_browser_console === true && value instanceof Page) {
+        if (this.options.log_browser_console === true && this.isInstanceOf(value, 'Page')) {
             value.on('console', this.logConsoleMessage);
         }
 
@@ -61,9 +59,27 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate
     }
 
     /**
+     * Checks if a value is an instance of a class. The check must be done with the `[object].constructor.name`
+     * property because relying on Puppeteer's constructors isn't viable since the exports aren't constrained by semver.
+     *
+     * @protected
+     * @param  {*} value
+     * @param  {string} className
+     *
+     * @see {@link https://github.com/GoogleChrome/puppeteer/issues/3067|Puppeteer's issue about semver on exports}
+     */
+    isInstanceOf(value, className) {
+        const nonObjectValues = [undefined, null];
+
+        return !nonObjectValues.includes(value)
+            && !nonObjectValues.includes(value.constructor)
+            && value.constructor.name === className;
+    }
+
+    /**
      * Log the console message.
      *
-     * @param {ConsoleMessage} consoleMessage
+     * @param  {ConsoleMessage} consoleMessage
      */
     async logConsoleMessage(consoleMessage) {
         const type = consoleMessage.type();

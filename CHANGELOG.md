@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 **Note:** PuPHPeteer is heavily based on [Rialto](https://github.com/nesk/rialto). For a complete overview of the changes, you might want to check out [Rialto's changelog](https://github.com/nesk/rialto/blob/master/CHANGELOG.md) too.
 
 ## [Unreleased]
+### Changed
+- Detect resource types by using the constructor name
+
 ### Fixed
 - Logs of initial pages are now retrieved
 
