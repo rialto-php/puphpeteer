@@ -46,6 +46,11 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate
 
         if (value instanceof Browser) {
             this.browsers.add(value);
+
+            if (this.options.log_browser_console === true) {
+                const initialPages = await value.pages()
+                initialPages.forEach(page => page.on('console', this.logConsoleMessage));
+            }
         }
 
         if (this.options.log_browser_console === true && value instanceof Page) {

@@ -181,13 +181,14 @@ class PuphpeteerTest extends TestCase
     public function browser_console_calls_are_logged()
     {
         $setups = [
-            [false, 'Received data from the port'],
-            [true, 'Received a Browser log:'],
+            [false, function ($browser) { return $browser->newPage(); }, 'Received data from the port'],
+            [true, function ($browser) { return $browser->newPage(); }, 'Received a Browser log:'],
+            [true, function ($browser) { return $browser->pages()[0]; }, 'Received a Browser log:'],
         ];
 
-        foreach ($setups as [$logBrowserConsole, $startsWith]) {
+        foreach ($setups as [$shoulLogBrowserConsole, $pageFactory, $startsWith]) {
             $puppeteer = new Puppeteer([
-                'log_browser_console' => $logBrowserConsole,
+                'log_browser_console' => $shoulLogBrowserConsole,
                 'logger' => $this->loggerMock(
                     $this->at(9),
                     $this->isLogLevel(),
@@ -196,7 +197,7 @@ class PuphpeteerTest extends TestCase
             ]);
 
             $this->browser = $puppeteer->launch($this->browserOptions);
-            $this->browser->newPage()->goto($this->url);
+            $pageFactory($this->browser)->goto($this->url);
         }
     }
 }
