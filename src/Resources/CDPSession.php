@@ -2,9 +2,11 @@
 
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
-
-class CDPSession extends BasicResource
+/**
+ * @method void detach()
+ * @method array send(string $method, array $params = [])
+ */
+class CDPSession extends EventEmitter
 {
     //
 }

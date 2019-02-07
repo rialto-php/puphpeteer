@@ -7,6 +7,13 @@ use Symfony\Component\Process\Process;
 use Nesk\Rialto\AbstractEntryPoint;
 use vierbergenlars\SemVer\{version, expression, SemVerException};
 
+/**
+ * @method Resources\Browser connect(array $options)
+ * @method Resources\BrowserFetcher createBrowserFetcher(array $options)
+ * @method string[] defaultArgs(array $options)
+ * @method string executablePath()
+ * @method Resources\Browser launch(array $options)
+ */
 class Puppeteer extends AbstractEntryPoint
 {
     /**

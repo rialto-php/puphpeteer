@@ -4,18 +4,30 @@ namespace Nesk\Puphpeteer\Traits;
 
 trait AliasesSelectionMethods
 {
-    public function querySelector(...$arguments)
+    /**
+     * @param string $selector
+     * @return \Nesk\Puphpeteer\Resources\ElementHandle[]
+     */
+    public function querySelector($selector)
     {
-        return $this->__call('$', $arguments);
+        return $this->__call('$', func_get_args());
     }
 
-    public function querySelectorAll(...$arguments)
+    /**
+     * @param string $selector
+     * @return \Nesk\Puphpeteer\Resources\ElementHandle[]
+     */
+    public function querySelectorAll($selector)
     {
-        return $this->__call('$$', $arguments);
+        return $this->__call('$$', func_get_args());
     }
 
-    public function querySelectorXPath(...$arguments)
+    /**
+     * @param string $expression
+     * @return \Nesk\Puphpeteer\Resources\ElementHandle[]
+     */
+    public function querySelectorXPath($expression)
     {
-        return $this->__call('$x', $arguments);
+        return $this->__call('$x', func_get_args());
     }
 }

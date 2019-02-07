@@ -5,10 +5,9 @@ namespace Nesk\Puphpeteer\Resources;
 use Nesk\Rialto\Data\BasicResource;
 
 /**
- * @method void start(array $options)
- * @method mixed stop()
+ * @method array snapshot(array $options = [])
  */
-class Tracing extends BasicResource
+class Accessibility extends BasicResource
 {
     //
 }

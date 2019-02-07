@@ -4,13 +4,25 @@ namespace Nesk\Puphpeteer\Traits;
 
 trait AliasesEvaluationMethods
 {
-    public function querySelectorEval(...$arguments)
+    /**
+     * @param string $selector
+     * @param \Nesk\Rialto\Data\JsFunction $pageFunction
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function querySelectorEval($selector, $pageFunction, ...$args)
     {
-        return $this->__call('$eval', $arguments);
+        return $this->__call('$eval', func_get_args());
     }
 
-    public function querySelectorAllEval(...$arguments)
+    /**
+     * @param string $selector
+     * @param \Nesk\Rialto\Data\JsFunction $pageFunction
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function querySelectorAllEval($selector, $pageFunction, ...$args)
     {
-        return $this->__call('$$eval', $arguments);
+        return $this->__call('$$eval', func_get_args());
     }
 }
