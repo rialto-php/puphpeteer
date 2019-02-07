@@ -15,7 +15,7 @@ namespace Nesk\Puphpeteer\Resources;
  * @method Target[] targets()
  * @method string userAgent()
  * @method string version()
- * @method waitForTarget(callable $predicate, array $options)
+ * @method waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, array $options = [])
  * @method string wsEndpoint()
  */
 class Browser extends EventEmitter

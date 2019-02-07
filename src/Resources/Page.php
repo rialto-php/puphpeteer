@@ -36,7 +36,8 @@ use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
  * @method Frame mainFrame()
  * @method array metrics()
  * @property Mouse $mouse
- * @method mixed pdf(array $options)
+ * @method mixed pdf(array $options = [])
+ * @method JSHandle queryObjects(JSHandle $prototypeHandle)
  * @method Response reload(array $options = [])
  * @method string|mixed screenshot(array $options = [])
  * @method string[] select(string $selector, string ...$values)
