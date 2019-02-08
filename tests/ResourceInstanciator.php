@@ -13,6 +13,9 @@ class ResourceInstanciator
         $this->url = $url;
 
         $this->resources = [
+            'Accessibility' => function ($puppeteer) {
+                return $this->Page($puppeteer)->accessibility;
+            },
             'Browser' => function ($puppeteer) {
                 return $puppeteer->launch($this->browserOptions);
             },
