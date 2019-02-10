@@ -24,5 +24,8 @@
   "dependencies": {
     "@nesk/rialto": "^1.2.1",
     "puppeteer": "~1.10.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
   }
 }
