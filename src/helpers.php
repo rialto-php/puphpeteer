@@ -114,6 +114,20 @@ if (! function_exists('str_startswith')) {
     }
 }
 
+if (! function_exists('str_endswith')) {
+    /**
+     * Determine if a given string ends with a given substring.
+     *
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+    function str_endswith($haystack, $needle)
+    {
+        return substr($haystack, -strlen($needle)) === (string) $needle;
+    }
+}
+
 if (! function_exists('array_get')) {
     /**
      * Get an item from an array.

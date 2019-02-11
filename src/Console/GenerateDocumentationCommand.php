@@ -18,12 +18,19 @@ class GenerateDocumentationCommand extends Command
     protected static $defaultName = 'generate';
 
     protected $typeMap = [
+        'function' => '\Nesk\Rialto\Data\JsFunction',
+        'Promise' => 'void',
         'Object' => 'array',
         'boolean' => 'bool',
-        'function' => 'JSFunction',
+        'number' => 'int',
         'any' => 'mixed',
-        '*' => 'mixed',
     ];
+
+    /** @var InputInterface */
+    private $input;
+
+    /** @var OutputInterface */
+    private $output;
 
     /**
      * Configure the command.
@@ -44,7 +51,7 @@ class GenerateDocumentationCommand extends Command
      */
     protected function getDocumentation(string $path): array
     {
-        return json_decode(shell_exec("./node_modules/.bin/jsdoc {$path}/lib -X"), true);
+        return json_decode(shell_exec("./node_modules/.bin/jsdoc {$path}/lib -X 2> /dev/null"), true);
     }
 
     /**
@@ -57,6 +64,10 @@ class GenerateDocumentationCommand extends Command
     {
         return array_filter($data, function ($value) {
             if (array_get($value, 'undocumented')) {
+                return false;
+            }
+
+            if (strpos(array_get($value, 'longname'), '<anonymous>') !== false) {
                 return false;
             }
 
@@ -76,7 +87,7 @@ class GenerateDocumentationCommand extends Command
      * @param string $type
      * @return string
      */
-    protected function transformType(?string $type): string
+    protected function formatType(?string $type): string
     {
         if (is_null($type)) {
             return 'mixed';
@@ -103,6 +114,30 @@ class GenerateDocumentationCommand extends Command
     }
 
     /**
+     * Format a value in a parameter string.
+     *
+     * @param array $value
+     * @return string
+     */
+    protected function formatParam(array $value): string
+    {
+        $name = $value['name'];
+        $optional = $value['optional'] ?? false;
+        $default = $value['defaultvalue'] ?? 'null';
+
+        $type = $this->formatType($value['type']['names'][0] ?? null);
+
+        $isArray = $type === 'array' || str_endswith($type, '[]');
+        $isString = $type === 'string';
+
+        $default = $isString ? "'{$default}'" : $default;
+
+        $suffix = $optional ? (' = '.($isArray ? '[]' : $default)) : '';
+
+        return "{$type} \${$name}".$suffix;
+    }
+
+    /**
      * Format a value in a method string.
      *
      * @param array $value
@@ -112,19 +147,15 @@ class GenerateDocumentationCommand extends Command
     {
         $name = $value['name'];
 
-        // Transform the parameters.
+        $static = array_get($value, 'scope') === 'static';
+
+        // Format the return type.
+        $return = $this->formatType($value['returns'][0]['type']['names'][0] ?? 'void');
+
+        // Format the parameters.
         $params = implode(', ', array_map(function ($param) {
-            $name = $param['name'];
-            $optional = $param['optional'] ?? false;
-            $default = $param['defaultvalue'] ?? 'null';
-
-            $type = $this->transformType($param['type']['names'][0] ?? null);
-
-            return "{$type} \${$name}".($optional ? ' = '.$default : '');
+            return $this->formatParam($param);
         }, $value['params']));
-
-        // Transform the return type.
-        $return = $this->transformType($value['returns'][0]['type']['names'][0] ?? 'void');
 
         return "@method {$return} {$name}({$params})";
     }
@@ -139,10 +170,62 @@ class GenerateDocumentationCommand extends Command
     {
         $name = $value['name'];
 
-        // Transform the return type.
-        $return = $this->transformType($value['returns'][0]['type']['names'][0] ?? null);
+        // Format the return type.
+        $return = $this->formatType($value['returns'][0]['type']['names'][0] ?? null);
 
         return "@property {$return} \${$name}";
+    }
+
+    /**
+     * Format an array of comments in a doc comment.
+     *
+     * @param string $class
+     * @param array $comments
+     * @return string
+     */
+    protected function formatDocComment(string $class, array $comments)
+    {
+        $comments = array_map(function ($line) {
+            return ' * '.$line;
+        }, array_merge([$class, ''], $comments));
+
+        return implode("\n", array_merge(['/**'], $comments, [' */']));
+    }
+
+    /**
+     * Put the doc comment
+     *
+     * @param string $className
+     * @param string $docComment
+     * @return void
+     */
+    protected function putDocComment(string $className, string $docComment)
+    {
+        try {
+            $class = new \ReflectionClass('Nesk\\Puphpeteer\\Resources\\'.$className);
+
+            $fileName = $class->getFileName();
+
+            $contents = file_get_contents($fileName);
+
+            // If there already is a doc comment, replace it.
+            if ($doc = $class->getDocComment()) {
+                $newContents = str_replace($doc, $docComment, $contents);
+            } else {
+                $startLine = $class->getStartLine();
+
+                $lines = explode("\n", $contents);
+
+                $before = array_slice($lines, 0, $startLine - 1);
+                $after = array_slice($lines, $startLine - 1);
+
+                $newContents = implode("\n", array_merge($before, explode("\n", $docComment), $after));
+            }
+
+            file_put_contents($fileName, $newContents);
+        } catch (\ReflectionException $e) {
+            $this->output->writeln("Cannot find Resource class for {$className}.");
+        }
     }
 
     /**
@@ -154,36 +237,33 @@ class GenerateDocumentationCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->input = $input;
+        $this->output = $output;
+
         $puppeteerPath = $input->getOption('puppeteerPath');
 
         $data = $this->getDocumentation($puppeteerPath);
         $data = $this->filter($data);
         $data = array_group_by($data, 'memberof');
 
-        $members = array_reduce(array_keys($data), function ($previous, $member) use ($data) {
-            $values = $data[$member];
-
-            $values = array_sort_by($values, 'name');
-
-            $values = array_map(function ($value) {
+        $data = array_map_with_keys($data, function ($items, $member) {
+            $comments = array_map(function ($value) {
                 switch ($value['kind']) {
                     case 'function':
                         return $this->formatMethod($value);
                     case 'member':
                         return $this->formatProperty($value);
                     default:
-                        throw new LogicException("Missing implementation for {$value['kind']}");
+                        throw new LogicException("Missing format implementation for {$value['kind']}");
                 }
-            }, $values);
+            }, array_sort_by($items, 'name'));
 
-            $previous[$member] = $values;
+            return [$member => $comments];
+        });
 
-            return $previous;
-        }, []);
-
-        $output->writeln('found '.sizeof($members).' classes.');
-
-        // TODO: implement writing to php classes
+        foreach ($data as $class => $comments) {
+            $this->putDocComment($class, $this->formatDocComment($class, $comments));
+        }
 
         return null;
     }
