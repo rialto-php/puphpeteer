@@ -130,13 +130,14 @@ class GenerateDocumentationCommand extends Command
     protected function formatParam(array $value): string
     {
         $name = $value['name'];
-        $optional = $value['optional'] ?? false;
+        $isOptional = $value['optional'] ?? false;
+        $isVariable = $value['variable'] ?? false;
         $default = $value['defaultvalue'] ?? 'null';
-        $spread = $value['variable'] ?? false;
 
         $type = $this->formatType($value['type']['names'][0] ?? null);
 
-        if ($spread) {
+        if ($isVariable) {
+            $type = str_before($type, '[]');
             return "{$type} ...\${$name}";
         }
 
@@ -145,7 +146,7 @@ class GenerateDocumentationCommand extends Command
 
         $default = $isString ? "'{$default}'" : $default;
 
-        $suffix = $optional ? (' = '.($isArray ? '[]' : $default)) : '';
+        $suffix = $isOptional ? (' = '.($isArray ? '[]' : $default)) : '';
 
         return "{$type} \${$name}".$suffix;
     }

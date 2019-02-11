@@ -20,6 +20,17 @@ if (! function_exists('str_startswith')) {
     }
 }
 
+if (! function_exists('str_before')) {
+    /**
+     * @param string $haystack
+     * @param string $needle
+     * @return string
+     */
+    function str_before($haystack, $needle) {
+        return substr($haystack, 0, strpos($haystack, $needle));
+    }
+}
+
 if (! function_exists('str_endswith')) {
     /**
      * Determine if a given string ends with a given substring.

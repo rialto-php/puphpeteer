@@ -18,7 +18,7 @@ use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
  * @method void press(string $key, array $options = [])
  * @method array screenshot(array $options = [])
  * @method void type(string $text, array $options = [])
- * @method void uploadFile(string[] ...$filePaths)
+ * @method void uploadFile(string ...$filePaths)
  */
 class ElementHandle extends BasicResource
 {

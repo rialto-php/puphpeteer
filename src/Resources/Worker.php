@@ -7,8 +7,8 @@ use Nesk\Rialto\Data\BasicResource;
 /**
  * Worker
  * 
- * @method mixed evaluate(\Nesk\Rialto\Data\JsFunction $pageFunction, mixed[] ...$args)
- * @method JSHandle evaluateHandle(\Nesk\Rialto\Data\JsFunction $pageFunction, mixed[] ...$args)
+ * @method mixed evaluate(\Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method JSHandle evaluateHandle(\Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
  * @method ExecutionContext executionContext()
  * @method string url()
  */
