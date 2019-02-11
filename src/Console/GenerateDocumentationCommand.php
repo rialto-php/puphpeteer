@@ -157,6 +157,10 @@ class GenerateDocumentationCommand extends Command
             return $this->formatParam($param);
         }, $value['params']));
 
+        if ($static) {
+            return "@method static {$return} {$name}({$params})";
+        }
+
         return "@method {$return} {$name}({$params})";
     }
 
