@@ -18,7 +18,7 @@ use Nesk\Rialto\Data\BasicResource;
  * @method Target[] targets()
  * @method string userAgent()
  * @method string version()
- * @method void waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, mixed $options)
+ * @method void waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, array $options)
  * @method string wsEndpoint()
  */
 class Browser extends BasicResource

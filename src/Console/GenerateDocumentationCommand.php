@@ -91,7 +91,7 @@ class GenerateDocumentationCommand extends Command
     protected function formatType(?string $type): string
     {
         if (is_null($type)) {
-            return 'mixed';
+            return 'array'; // Everything is an object (array) in JavaScript.
         }
 
         // Unwrap Promise

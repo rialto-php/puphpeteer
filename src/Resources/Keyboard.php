@@ -7,7 +7,7 @@ use Nesk\Rialto\Data\BasicResource;
 /**
  * Keyboard
  * 
- * @method void down(string $key, mixed $options)
+ * @method void down(string $key, array $options)
  * @method void press(string $key, array $options = [])
  * @method void sendCharacter(string $char)
  * @method void type(string $text, array $options = [])

@@ -13,7 +13,7 @@ use Nesk\Rialto\Data\BasicResource;
  * @method void overridePermissions(string $origin, string[] $permissions)
  * @method Page[] pages()
  * @method Target[] targets()
- * @method void waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, mixed $options)
+ * @method void waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, array $options)
  */
 class BrowserContext extends BasicResource
 {
