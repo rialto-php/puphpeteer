@@ -3,6 +3,7 @@
 namespace Nesk\Puphpeteer\Console;
 
 use LogicException;
+use Tightenco\Collect\Support\Collection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,6 +18,30 @@ class GenerateDocumentationCommand extends Command
      */
     protected static $defaultName = 'generate';
 
+    /**
+     * The types that should be kept as-is.
+     *
+     * @var array
+     */
+    protected $primitives = [
+        '\Nesk\Rialto\Data\JsFunction',
+        'string',
+        'int',
+        'float',
+        'bool',
+        'array',
+        'resource',
+        'callable',
+        'null',
+        'mixed',
+        'void',
+    ];
+
+    /**
+     * The mapping of JavaScript to PHP types.
+     *
+     * @var array
+     */
     protected $typeMap = [
         'function' => '\Nesk\Rialto\Data\JsFunction',
         'Promise' => 'void',
@@ -24,13 +49,17 @@ class GenerateDocumentationCommand extends Command
         'boolean' => 'bool',
         'number' => 'int',
         'any' => 'mixed',
+        '*' => 'mixed',
     ];
 
     /** @var InputInterface */
-    private $input;
+    protected $input;
 
     /** @var OutputInterface */
-    private $output;
+    protected $output;
+
+    /** @var Collection */
+    protected $classdefs;
 
     /**
      * Configure the command.
@@ -39,7 +68,6 @@ class GenerateDocumentationCommand extends Command
      */
     protected function configure()
     {
-        $this->addOption('pretend', 'p', InputOption::VALUE_OPTIONAL, 'Dump the diff that would be written.');
         $this->addOption('puppeteerPath', null, InputOption::VALUE_OPTIONAL, 'The path where puppeteer is installed.', './node_modules/puppeteer');
     }
 
@@ -52,33 +80,6 @@ class GenerateDocumentationCommand extends Command
     protected function getDocumentation(string $path): array
     {
         return json_decode(shell_exec("./node_modules/.bin/jsdoc {$path}/lib -X 2> /dev/null"), true);
-    }
-
-    /**
-     * Filter the documentation items.
-     *
-     * @param array $data
-     * @return array
-     */
-    protected function filter(array $data): array
-    {
-        return array_filter($data, function ($value) {
-            if (array_get($value, 'undocumented')) {
-                return false;
-            }
-
-            if (strpos(array_get($value, 'longname'), '<anonymous>') !== false) {
-                return false;
-            }
-
-            switch ($value['kind']) {
-                case 'function':
-                case 'member':
-                    return ! str_startswith($value['name'], '_') && $value['scope'] !== 'inner' && ! array_key_exists('isEnum', $value);
-                default:
-                    return false;
-            }
-        });
     }
 
     /**
@@ -98,11 +99,11 @@ class GenerateDocumentationCommand extends Command
             $type = $matches[1];
         }
 
-        // Unwrap Array
-        $array = false;
-        if (preg_match('/Array\.<[\!\?]?(.+)>/', $type, $matches)) {
+        // Unwrap Array and Sets
+        $suffix = null;
+        if (preg_match('/(?:Array|Set)\.<[\!\?]?(.+)>/', $type, $matches)) {
             $type = $matches[1];
-            $array = true;
+            $suffix = '[]';
         }
 
         // Normalize Puppeteer namespace
@@ -110,7 +111,14 @@ class GenerateDocumentationCommand extends Command
             $type = $matches[1];
         }
 
-        return array_get($this->typeMap, $type, $type).($array ? '[]' : '');
+        $type = array_get($this->typeMap, $type, $type);
+
+        if ($this->classdefs->contains($type) || collect($this->primitives)->contains($type)) {
+            return $type.$suffix;
+        }
+
+        // Everything is an object (array) in JavaScript.
+        return 'array'.$suffix;
     }
 
     /**
@@ -124,8 +132,13 @@ class GenerateDocumentationCommand extends Command
         $name = $value['name'];
         $optional = $value['optional'] ?? false;
         $default = $value['defaultvalue'] ?? 'null';
+        $spread = $value['variable'] ?? false;
 
         $type = $this->formatType($value['type']['names'][0] ?? null);
+
+        if ($spread) {
+            return "{$type} ...\${$name}";
+        }
 
         $isArray = $type === 'array' || str_endswith($type, '[]');
         $isString = $type === 'string';
@@ -184,20 +197,36 @@ class GenerateDocumentationCommand extends Command
      * Format an array of comments in a doc comment.
      *
      * @param string $class
-     * @param array $comments
+     * @param Collection $comments
      * @return string
      */
-    protected function formatDocComment(string $class, array $comments)
+    protected function formatDocComment(string $class, Collection $comments)
     {
-        $comments = array_map(function ($line) {
-            return ' * '.$line;
-        }, array_merge([$class, ''], $comments));
+        $comments = collect([$class, ''])->merge($comments)->map(function ($comment) {
+            return ' * '.$comment;
+        });
 
-        return implode("\n", array_merge(['/**'], $comments, [' */']));
+        return collect('/**')->merge($comments)->push(' */')->implode("\n");
     }
 
     /**
-     * Put the doc comment
+     * Get the ReflectionClass for the given resource name.
+     *
+     * @param string $className
+     * @return \ReflectionClass
+     */
+    protected function getReflectionClass(string $className)
+    {
+        try {
+            return new \ReflectionClass('Nesk\\Puphpeteer\\Resources\\'.$className);
+        } catch (\ReflectionException $e) {
+            $this->output->writeln("Cannot find Resource class for {$className}.");
+            return null;
+        }
+    }
+
+    /**
+     * Put the doc comment in the PHP class.
      *
      * @param string $className
      * @param string $docComment
@@ -205,31 +234,31 @@ class GenerateDocumentationCommand extends Command
      */
     protected function putDocComment(string $className, string $docComment)
     {
-        try {
-            $class = new \ReflectionClass('Nesk\\Puphpeteer\\Resources\\'.$className);
+        $class = $this->getReflectionClass($className);
 
-            $fileName = $class->getFileName();
-
-            $contents = file_get_contents($fileName);
-
-            // If there already is a doc comment, replace it.
-            if ($doc = $class->getDocComment()) {
-                $newContents = str_replace($doc, $docComment, $contents);
-            } else {
-                $startLine = $class->getStartLine();
-
-                $lines = explode("\n", $contents);
-
-                $before = array_slice($lines, 0, $startLine - 1);
-                $after = array_slice($lines, $startLine - 1);
-
-                $newContents = implode("\n", array_merge($before, explode("\n", $docComment), $after));
-            }
-
-            file_put_contents($fileName, $newContents);
-        } catch (\ReflectionException $e) {
-            $this->output->writeln("Cannot find Resource class for {$className}.");
+        if (! $class) {
+            return;
         }
+
+        $fileName = $class->getFileName();
+
+        $contents = file_get_contents($fileName);
+
+        // If there already is a doc comment, replace it.
+        if ($doc = $class->getDocComment()) {
+            $newContents = str_replace($doc, $docComment, $contents);
+        } else {
+            $startLine = $class->getStartLine();
+
+            $lines = explode("\n", $contents);
+
+            $before = array_slice($lines, 0, $startLine - 1);
+            $after = array_slice($lines, $startLine - 1);
+
+            $newContents = implode("\n", array_merge($before, explode("\n", $docComment), $after));
+        }
+
+        file_put_contents($fileName, $newContents);
     }
 
     /**
@@ -246,29 +275,58 @@ class GenerateDocumentationCommand extends Command
 
         $puppeteerPath = $input->getOption('puppeteerPath');
 
-        $data = $this->getDocumentation($puppeteerPath);
-        $data = $this->filter($data);
-        $data = array_group_by($data, 'memberof');
+        $data = collect($this->getDocumentation($puppeteerPath));
 
-        $data = array_map_with_keys($data, function ($items, $member) {
-            $comments = array_map(function ($value) {
-                switch ($value['kind']) {
-                    case 'function':
-                        return $this->formatMethod($value);
-                    case 'member':
-                        return $this->formatProperty($value);
-                    default:
-                        throw new LogicException("Missing format implementation for {$value['kind']}");
-                }
-            }, array_sort_by($items, 'name'));
+        $this->classdefs = $data->where('kind', 'class')->map->name->unique();
 
-            return [$member => $comments];
-        });
+        $data->whereIn('memberof', $this->classdefs)
+            ->filter($this->getMemberFilter())
+            ->groupBy('memberof')->mapWithKeys(function ($items, $member) {
+                $comments = collect($items)->sortBy('name')->map(function ($item) {
+                    switch ($item['kind']) {
+                        case 'function':
+                            return $this->formatMethod($item);
+                        case 'member':
+                            return $this->formatProperty($item);
+                        default:
+                            throw new LogicException("Missing format implementation for {$item['kind']}");
+                    }
+                });
 
-        foreach ($data as $class => $comments) {
-            $this->putDocComment($class, $this->formatDocComment($class, $comments));
-        }
+                return [$member => $comments];
+            })->each(function ($comments, $class) {
+                $docComment = $this->formatDocComment($class, $comments);
+                $this->putDocComment($class, $docComment);
+            });
 
         return null;
+    }
+
+    /**
+     * Get the filter method.
+     *
+     * @return \Closure
+     */
+    protected function getMemberFilter()
+    {
+        return function ($item) {
+            if (str_contains(array_get($item, 'longname'), '<anonymous>')) {
+                return false;
+            }
+
+            if (array_get($item, 'undocumented') || array_get($item, 'isEnum')) {
+                return false;
+            }
+
+            if (! in_array(array_get($item, 'kind'), ['function', 'member'])) {
+                return false;
+            }
+
+            if (str_startswith(array_get($item, 'name'), ['_', '$'])) {
+                return false;
+            }
+
+            return true;
+        };
     }
 }
