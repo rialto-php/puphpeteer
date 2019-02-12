@@ -2,11 +2,12 @@
 
 namespace Nesk\Puphpeteer\Console;
 
-use LogicException;
-use Tightenco\Collect\Support\Collection;
+use Psr\Log\LoggerInterface;
+use Nesk\Puphpeteer\Support\JsDocFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateDocumentationCommand extends Command
@@ -18,47 +19,13 @@ class GenerateDocumentationCommand extends Command
      */
     protected static $defaultName = 'generate';
 
-    /**
-     * The types that should be kept as-is.
-     *
-     * @var array
-     */
-    protected $primitives = [
-        '\Nesk\Rialto\Data\JsFunction',
-        'string',
-        'int',
-        'float',
-        'bool',
-        'array',
-        'resource',
-        'callable',
-        'null',
-        'mixed',
-        'void',
-    ];
-
-    /**
-     * The mapping of JavaScript to PHP types.
-     *
-     * @var array
-     */
-    protected $typeMap = [
-        'function' => '\Nesk\Rialto\Data\JsFunction',
-        'Promise' => 'void',
-        'Object' => 'array',
-        'boolean' => 'bool',
-        'number' => 'int',
-        'any' => 'mixed',
-        '*' => 'mixed',
-    ];
-
     /** @var InputInterface */
     protected $input;
 
-    /** @var OutputInterface */
-    protected $output;
+    /** @var LoggerInterface */
+    protected $logger;
 
-    /** @var Collection */
+    /** @var array */
     protected $classdefs;
 
     /**
@@ -74,140 +41,15 @@ class GenerateDocumentationCommand extends Command
     /**
      * Get the documentation from the JavaScript source.
      *
-     * @param string $path
      * @return array
      */
-    protected function getDocumentation(string $path): array
+    protected function getDocumentation(): ?array
     {
-        return json_decode(shell_exec("./node_modules/.bin/jsdoc {$path}/lib -X 2> /dev/null"), true);
-    }
+        $path = $this->input->getOption('puppeteerPath');
 
-    /**
-     * Transform the type string.
-     *
-     * @param string $type
-     * @return string
-     */
-    protected function formatType(?string $type): string
-    {
-        if (is_null($type)) {
-            return 'array'; // Everything is an object (array) in JavaScript.
-        }
+        $cmd = "./node_modules/.bin/jsdoc {$path}/lib -X 2> /dev/null";
 
-        // Unwrap Promise
-        if (preg_match('/Promise\.<[\!\?]?(.+)>/', $type, $matches)) {
-            $type = $matches[1];
-        }
-
-        // Unwrap Array and Sets
-        $suffix = null;
-        if (preg_match('/(?:Array|Set)\.<[\!\?]?(.+)>/', $type, $matches)) {
-            $type = $matches[1];
-            $suffix = '[]';
-        }
-
-        // Normalize Puppeteer namespace
-        if (preg_match('/Puppeteer\.(.+)/', $type, $matches)) {
-            $type = $matches[1];
-        }
-
-        $type = array_get($this->typeMap, $type, $type);
-
-        if ($this->classdefs->contains($type) || collect($this->primitives)->contains($type)) {
-            return $type.$suffix;
-        }
-
-        // Everything is an object (array) in JavaScript.
-        return 'array'.$suffix;
-    }
-
-    /**
-     * Format a value in a parameter string.
-     *
-     * @param array $value
-     * @return string
-     */
-    protected function formatParam(array $value): string
-    {
-        $name = $value['name'];
-        $isOptional = $value['optional'] ?? false;
-        $isVariable = $value['variable'] ?? false;
-        $default = $value['defaultvalue'] ?? 'null';
-
-        $type = $this->formatType($value['type']['names'][0] ?? null);
-
-        if ($isVariable) {
-            $type = str_before($type, '[]');
-            return "{$type} ...\${$name}";
-        }
-
-        $isArray = $type === 'array' || str_endswith($type, '[]');
-        $isString = $type === 'string';
-
-        $default = $isString ? "'{$default}'" : $default;
-
-        $suffix = $isOptional ? (' = '.($isArray ? '[]' : $default)) : '';
-
-        return "{$type} \${$name}".$suffix;
-    }
-
-    /**
-     * Format a value in a method string.
-     *
-     * @param array $value
-     * @return string
-     */
-    protected function formatMethod(array $value): string
-    {
-        $name = $value['name'];
-
-        $static = array_get($value, 'scope') === 'static';
-
-        // Format the return type.
-        $return = $this->formatType($value['returns'][0]['type']['names'][0] ?? 'void');
-
-        // Format the parameters.
-        $params = implode(', ', array_map(function ($param) {
-            return $this->formatParam($param);
-        }, $value['params']));
-
-        if ($static) {
-            return "@method static {$return} {$name}({$params})";
-        }
-
-        return "@method {$return} {$name}({$params})";
-    }
-
-    /**
-     * Format a value in a property string.
-     *
-     * @param array $value
-     * @return string
-     */
-    protected function formatProperty(array $value): string
-    {
-        $name = $value['name'];
-
-        // Format the return type.
-        $return = $this->formatType($value['returns'][0]['type']['names'][0] ?? null);
-
-        return "@property {$return} \${$name}";
-    }
-
-    /**
-     * Format an array of comments in a doc comment.
-     *
-     * @param string $class
-     * @param Collection $comments
-     * @return string
-     */
-    protected function formatDocComment(string $class, Collection $comments)
-    {
-        $comments = collect([$class, ''])->merge($comments)->map(function ($comment) {
-            return ' * '.$comment;
-        });
-
-        return collect('/**')->merge($comments)->push(' */')->implode("\n");
+        return json_decode(shell_exec($cmd), true);
     }
 
     /**
@@ -221,9 +63,41 @@ class GenerateDocumentationCommand extends Command
         try {
             return new \ReflectionClass('Nesk\\Puphpeteer\\Resources\\'.$className);
         } catch (\ReflectionException $e) {
-            $this->output->writeln("Cannot find Resource class for {$className}.");
+            $this->logger->warning("Cannot find Resource class for {$className}.");
             return null;
         }
+    }
+
+    /**
+     * Get the filter method.
+     *
+     * @return \Closure
+     */
+    protected function getDocletFilter()
+    {
+        return function ($item) {
+            if (! in_array($item['memberof'] ?? null, $this->classdefs)) {
+                return false;
+            }
+
+            if (strpos($item['longname'], '<anonymous>') !== false) {
+                return false;
+            }
+
+            if (($item['undocumented'] ?? false) || ($item['isEnum'] ?? false)) {
+                return false;
+            }
+
+            if (! in_array($item['kind'], ['function', 'member'])) {
+                return false;
+            }
+
+            if ($item['name'][0] === '_' || $item['name'][0] === '$') {
+                return false;
+            }
+
+            return true;
+        };
     }
 
     /**
@@ -272,62 +146,81 @@ class GenerateDocumentationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
-        $this->output = $output;
+        $this->logger = new ConsoleLogger($output);
 
-        $puppeteerPath = $input->getOption('puppeteerPath');
+        $docs = $this->getDocumentation();
 
-        $data = collect($this->getDocumentation($puppeteerPath));
+        $this->classdefs = array_filter($docs, function ($doclet) {
+            return $doclet['kind'] === 'class';
+        });
+        $this->classdefs = array_map(function ($doclet) {
+            return $doclet['longname'];
+        }, $this->classdefs);
 
-        $this->classdefs = $data->where('kind', 'class')->map->name->unique();
+        JsDocFormatter::setClassdefs($this->classdefs);
 
-        $data->whereIn('memberof', $this->classdefs)
-            ->filter($this->getMemberFilter())
-            ->groupBy('memberof')->mapWithKeys(function ($items, $member) {
-                $comments = collect($items)->sortBy('name')->map(function ($item) {
-                    switch ($item['kind']) {
-                        case 'function':
-                            return $this->formatMethod($item);
-                        case 'member':
-                            return $this->formatProperty($item);
-                        default:
-                            throw new LogicException("Missing format implementation for {$item['kind']}");
-                    }
-                });
+        $docs = array_filter($docs, $this->getDocletFilter());
 
-                return [$member => $comments];
-            })->each(function ($comments, $class) {
-                $docComment = $this->formatDocComment($class, $comments);
-                $this->putDocComment($class, $docComment);
-            });
+        $classes = static::group($docs, 'memberof');
+
+        foreach ($classes as $class => $doclets) {
+            $doclets = array_map(function ($doclet) {
+                return JsDocFormatter::format($doclet);
+            }, static::sort($doclets, 'name'));
+
+            $this->putDocComment($class, JsDocFormatter::formatDocblock($doclets));
+        }
 
         return null;
     }
 
     /**
-     * Get the filter method.
+     * Sort the array using the given column.
      *
-     * @return \Closure
+     * @param array $array
+     * @param string $column
+     * @param bool|null $descending
+     * @return array
      */
-    protected function getMemberFilter()
+    public static function sort(array $array, string $column, $descending = false)
     {
-        return function ($item) {
-            if (str_contains(array_get($item, 'longname'), '<anonymous>')) {
-                return false;
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            $results[$key] = $column ? $value[$column] : $value;
+        }
+
+        $descending ? arsort($results)
+            : asort($results);
+
+        foreach (array_keys($results) as $key) {
+            $results[$key] = $array[$key];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Group the array by the given column.
+     *
+     * @param array $array
+     * @param string $column
+     * @return array
+     */
+    public static function group(array $array, string $column)
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            $groupKey = $value[$column];
+
+            if (! array_key_exists($groupKey, $results)) {
+                $results[$groupKey] = [];
             }
 
-            if (array_get($item, 'undocumented') || array_get($item, 'isEnum')) {
-                return false;
-            }
+            $results[$groupKey][] = $value;
+        }
 
-            if (! in_array(array_get($item, 'kind'), ['function', 'member'])) {
-                return false;
-            }
-
-            if (str_startswith(array_get($item, 'name'), ['_', '$'])) {
-                return false;
-            }
-
-            return true;
-        };
+        return $results;
     }
 }
