@@ -72,7 +72,7 @@ class JsDocFormatter
     public static function formatFunction(array $doclet): string
     {
         $name = $doclet['name'];
-        $static = $doclet['scope'] ?? null === 'static';
+        $static = $doclet['scope'] === 'static';
 
         // Format the return type.
         $return = array_key_exists('returns', $doclet) ? static::formatType($doclet['returns'][0]['type']) : 'void';

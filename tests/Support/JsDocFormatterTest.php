@@ -104,6 +104,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
         ];
 
         $this->assertEquals('@method void foo()', JsDocFormatter::format($doclet));
