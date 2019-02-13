@@ -69,13 +69,31 @@ class GenerateDocumentationCommand extends Command
     }
 
     /**
-     * Get the filter method.
+     * Get the class definitions from the docs.
      *
-     * @return \Closure
+     * @param array $docs
+     * @return array
      */
-    protected function getDocletFilter()
+    protected function getClasses(array $docs): array
     {
-        return function ($item) {
+        $classdefs = array_filter($docs, function ($doclet) {
+            return $doclet['kind'] === 'class';
+        });
+
+        return array_map(function ($doclet) {
+            return $doclet['longname'];
+        }, $classdefs);
+    }
+
+    /**
+     * Get the function and member doclets from the docs.
+     *
+     * @param array $docs
+     * @return array
+     */
+    protected function getDoclets(array $docs): array
+    {
+        return array_filter($docs, function ($item) {
             if (! in_array($item['memberof'] ?? null, $this->classdefs)) {
                 return false;
             }
@@ -97,7 +115,7 @@ class GenerateDocumentationCommand extends Command
             }
 
             return true;
-        };
+        });
     }
 
     /**
@@ -150,18 +168,10 @@ class GenerateDocumentationCommand extends Command
 
         $docs = $this->getDocumentation();
 
-        $this->classdefs = array_filter($docs, function ($doclet) {
-            return $doclet['kind'] === 'class';
-        });
-        $this->classdefs = array_map(function ($doclet) {
-            return $doclet['longname'];
-        }, $this->classdefs);
-
+        $this->classdefs = $this->getClasses($docs);
         JsDocFormatter::setClassdefs($this->classdefs);
 
-        $docs = array_filter($docs, $this->getDocletFilter());
-
-        $classes = static::group($docs, 'memberof');
+        $classes = static::group($this->getDoclets($docs), 'memberof');
 
         foreach ($classes as $class => $doclets) {
             $doclets = array_map(function ($doclet) {
