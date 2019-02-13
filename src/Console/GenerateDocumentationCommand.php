@@ -182,7 +182,7 @@ class GenerateDocumentationCommand extends Command
      * @param bool|null $descending
      * @return array
      */
-    public static function sort(array $array, string $column, $descending = false)
+    protected static function sort(array $array, string $column, $descending = false)
     {
         $results = [];
 
@@ -207,7 +207,7 @@ class GenerateDocumentationCommand extends Command
      * @param string $column
      * @return array
      */
-    public static function group(array $array, string $column)
+    protected static function group(array $array, string $column)
     {
         $results = [];
 
