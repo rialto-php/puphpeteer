@@ -118,7 +118,7 @@ class JsDocFormatter
         $isVariable = $doclet['variable'] ?? false;
         $default = $doclet['defaultvalue'] ?? 'null';
 
-        $type = array_key_exists('type', $doclet) ? static::formatType($doclet['type']) : 'mixed';
+        $type = array_key_exists('type', $doclet) ? static::formatType($doclet['type']) : 'array';
 
         if ($isVariable) {
             $type = explode('[]', $type)[0];
