@@ -128,6 +128,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
             'returns' => [
                 [
                     'type' => [
@@ -146,6 +147,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
             'params' => [
                 [
                     'name' => 'bar',
@@ -153,7 +155,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(mixed $bar)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array $bar)', JsDocFormatter::format($doclet));
     }
 
     /** @test */
@@ -162,6 +164,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
             'params' => [
                 [
                     'name' => 'bar',
@@ -181,6 +184,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
             'params' => [
                 [
                     'name' => 'bar',
@@ -191,7 +195,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(mixed $bar, mixed $baz)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array $bar, array $baz)', JsDocFormatter::format($doclet));
     }
 
     /** @test */
@@ -200,6 +204,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
             'params' => [
                 [
                     'name' => 'bar',
@@ -208,7 +213,50 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(mixed $bar = null)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array $bar = [])', JsDocFormatter::format($doclet));
+    }
+
+    /** @test */
+    public function can_format_function_with_optional_typed_parameter()
+    {
+        $doclet = [
+            'kind' => 'function',
+            'name' => 'foo',
+            'scope' => 'instance',
+            'params' => [
+                [
+                    'name' => 'bar',
+                    'optional' => true,
+                    'type' => [
+                        'names' => ['string'],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertEquals('@method void foo(string $bar = null)', JsDocFormatter::format($doclet));
+    }
+
+    /** @test */
+    public function can_format_function_with_optional_string_parameter_with_default()
+    {
+        $doclet = [
+            'kind' => 'function',
+            'name' => 'foo',
+            'scope' => 'instance',
+            'params' => [
+                [
+                    'name' => 'bar',
+                    'optional' => true,
+                    'defaultvalue' => 'baz',
+                    'type' => [
+                        'names' => ['string'],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertEquals('@method void foo(string $bar = \'baz\')', JsDocFormatter::format($doclet));
     }
 
     /** @test */
@@ -217,6 +265,7 @@ class JsDocFormatterTest extends TestCase
         $doclet = [
             'kind' => 'function',
             'name' => 'foo',
+            'scope' => 'instance',
             'params' => [
                 [
                     'name' => 'args',
@@ -225,7 +274,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(mixed ...$args)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array ...$args)', JsDocFormatter::format($doclet));
     }
 
     /** @test */

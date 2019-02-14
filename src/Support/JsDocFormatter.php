@@ -116,7 +116,7 @@ class JsDocFormatter
         $name = $doclet['name'];
         $isOptional = $doclet['optional'] ?? false;
         $isVariable = $doclet['variable'] ?? false;
-        $default = $doclet['defaultvalue'] ?? 'null';
+        $default = $doclet['defaultvalue'] ?? null;
 
         $type = array_key_exists('type', $doclet) ? static::formatType($doclet['type']) : 'array';
 
@@ -128,11 +128,11 @@ class JsDocFormatter
         $isArray = $type === 'array' || substr($type, -strlen('[]')) === '[]';
         $isString = $type === 'string';
 
-        $default = $isString ? "'{$default}'" : $default;
+        $default = is_null($default) ? 'null' : ($isString ? "'{$default}'" : $default);
 
         $suffix = $isOptional ? (' = '.($isArray ? '[]' : $default)) : '';
 
-        return "{$type} \${$name}".$suffix;
+        return "{$type} \${$name}{$suffix}";
     }
 
     /**
