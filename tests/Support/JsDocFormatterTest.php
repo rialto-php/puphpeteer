@@ -292,7 +292,7 @@ class JsDocFormatterTest extends TestCase
     public function can_format_typed_member()
     {
         $doclet = [
-            'kind' => 'doclet',
+            'kind' => 'member',
             'name' => 'foo',
             'returns' => [
                 [
@@ -303,7 +303,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@property string $foo', JsDocFormatter::formatMember($doclet));
+        $this->assertEquals('@property string $foo', JsDocFormatter::format($doclet));
     }
     
     /** @test @expectedException \LogicException */
