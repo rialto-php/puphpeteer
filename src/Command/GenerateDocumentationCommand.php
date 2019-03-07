@@ -102,6 +102,10 @@ class GenerateDocumentationCommand extends Command
                 return false;
             }
 
+            if ($item['scope'] === 'static') {
+                return false;
+            }
+
             if ($item['name'][0] === '_' || $item['name'][0] === '$') {
                 return false;
             }
