@@ -3,6 +3,7 @@
 namespace Nesk\Puphpeteer\Command;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Process\Process;
 use Nesk\Puphpeteer\Support\JsDocFormatter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -47,9 +48,10 @@ class GenerateDocumentationCommand extends Command
     {
         $path = $this->input->getOption('puppeteerPath');
 
-        $cmd = "./node_modules/.bin/jsdoc {$path}/lib -X 2> /dev/null";
+        $process = new Process(['./node_modules/.bin/jsdoc', '-X', "{$path}/lib"]);
+        $process->run();
 
-        return json_decode(shell_exec($cmd), true);
+        return json_decode($process->getOutput(), true);
     }
 
     /**
