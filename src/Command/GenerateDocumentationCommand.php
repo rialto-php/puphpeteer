@@ -104,7 +104,7 @@ class GenerateDocumentationCommand extends Command
                 return false;
             }
 
-            if (($item['undocumented'] ?? false) || ($item['isEnum'] ?? false)) {
+            if (($item['isEnum'] ?? false)) {
                 return false;
             }
 
