@@ -3,7 +3,7 @@
 require __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use Nesk\Puphpeteer\Console\GenerateDocumentationCommand;
+use Nesk\Puphpeteer\Command\GenerateDocumentationCommand;
 
 (new Application())
     ->add(new GenerateDocumentationCommand)

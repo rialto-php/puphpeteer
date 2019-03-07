@@ -1,6 +1,6 @@
 <?php
 
-namespace Nesk\Puphpeteer\Console;
+namespace Nesk\Puphpeteer\Command;
 
 use Psr\Log\LoggerInterface;
 use Nesk\Puphpeteer\Support\JsDocFormatter;
