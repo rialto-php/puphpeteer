@@ -149,6 +149,26 @@ class JsDocFormatterTest extends TestCase
     }
 
     /** @test */
+    public function can_format_function_with_nullable_return()
+    {
+        $doclet = [
+            'kind' => 'function',
+            'name' => 'foo',
+            'scope' => 'instance',
+            'returns' => [
+                [
+                    'type' => [
+                        'names' => ['boolean'],
+                    ],
+                    'nullable' => true,
+                ],
+            ],
+        ];
+
+        $this->assertEquals('@method bool|null foo()', $this->formatter->format($doclet));
+    }
+
+    /** @test */
     public function can_format_function_with_parameter()
     {
         $doclet = [
@@ -221,6 +241,24 @@ class JsDocFormatterTest extends TestCase
         ];
 
         $this->assertEquals('@method void foo(array $bar = [])', $this->formatter->format($doclet));
+    }
+
+    /** @test */
+    public function can_format_function_with_nullable_parameter()
+    {
+        $doclet = [
+            'kind' => 'function',
+            'name' => 'foo',
+            'scope' => 'instance',
+            'params' => [
+                [
+                    'name' => 'bar',
+                    'nullable' => true,
+                ],
+            ],
+        ];
+
+        $this->assertEquals('@method void foo(array|null $bar)', $this->formatter->format($doclet));
     }
 
     /** @test */

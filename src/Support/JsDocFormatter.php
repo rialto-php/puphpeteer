@@ -82,21 +82,26 @@ class JsDocFormatter
     public function formatFunction(array $doclet): string
     {
         $name = $doclet['name'];
-        $static = $doclet['scope'] === 'static';
+        $isStatic = $doclet['scope'] === 'static';
+
+        $return = $doclet['returns'][0] ?? null;
+        $isNullable = $return['nullable'] ?? false;
 
         // Format the return type.
-        $return = array_key_exists('returns', $doclet) ? $this->formatType($doclet['returns'][0]['type']) : 'void';
+        $type = $return && array_key_exists('type', $return) ? $this->formatType($return['type']) : 'void';
+
+        $type = $isNullable ? $type.'|null' : $type;
 
         // Format the parameters.
         $params = implode(', ', array_map(function ($param) {
             return $this->formatParam($param);
         }, $doclet['params'] ?? []));
 
-        if ($static) {
-            return "@method static {$return} {$name}({$params})";
+        if ($isStatic) {
+            return "@method static {$type} {$name}({$params})";
         }
 
-        return "@method {$return} {$name}({$params})";
+        return "@method {$type} {$name}({$params})";
     }
 
     /**
@@ -126,6 +131,7 @@ class JsDocFormatter
         $name = $doclet['name'];
         $isOptional = $doclet['optional'] ?? false;
         $isVariable = $doclet['variable'] ?? false;
+        $isNullable = $doclet['nullable'] ?? false;
         $default = $doclet['defaultvalue'] ?? null;
 
         $type = array_key_exists('type', $doclet) ? $this->formatType($doclet['type']) : 'array';
@@ -137,6 +143,8 @@ class JsDocFormatter
 
         $isArray = $type === 'array' || substr($type, -strlen('[]')) === '[]';
         $isString = $type === 'string';
+
+        $type = $isNullable ? $type.'|null' : $type;
 
         $default = is_null($default) ? 'null' : ($isString ? "'{$default}'" : $default);
 
@@ -167,6 +175,11 @@ class JsDocFormatter
             $suffix = '[]';
         }
 
+        // Maps Are Arrays
+        if (preg_match('/(?:Map)\.<[\!\?]?(.+)>/', $name)) {
+            $name = 'array';
+        }
+
         // Normalize Puppeteer namespace
         if (preg_match('/Puppeteer\.(.+)/', $name, $matches)) {
             $name = $matches[1];
@@ -179,7 +192,7 @@ class JsDocFormatter
         }
 
         // Everything is an object (array) in JavaScript.
-        return 'array'.$suffix;
+        return '\Nesk\Rialto\Data\BasicResource'.$suffix;
     }
 
     /**
