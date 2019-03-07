@@ -34,18 +34,14 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Configure the command.
-     *
-     * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addOption('puppeteerPath', null, InputOption::VALUE_OPTIONAL, 'The path where puppeteer is installed.', './node_modules/puppeteer');
     }
 
     /**
      * Get the documentation from the JavaScript source.
-     *
-     * @return array
      */
     protected function getDocumentation(): ?array
     {
@@ -59,11 +55,8 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Get the ReflectionClass for the given resource name.
-     *
-     * @param string $className
-     * @return \ReflectionClass
      */
-    protected function getReflectionClass(string $className)
+    protected function getReflectionClass(string $className): ?\ReflectionClass
     {
         try {
             return new \ReflectionClass('Nesk\\Puphpeteer\\Resources\\'.$className);
@@ -75,9 +68,6 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Get the class definitions from the docs.
-     *
-     * @param array $docs
-     * @return array
      */
     protected function getClasses(array $docs): array
     {
@@ -92,9 +82,6 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Get the function and member doclets from the docs.
-     *
-     * @param array $docs
-     * @return array
      */
     protected function getDoclets(array $docs): array
     {
@@ -129,12 +116,8 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Put the doc comment in the PHP class.
-     *
-     * @param string $className
-     * @param string $docComment
-     * @return void
      */
-    protected function putDocComment(string $className, string $docComment)
+    protected function putDocComment(string $className, string $docComment): void
     {
         $class = $this->getReflectionClass($className);
 
@@ -165,12 +148,8 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Executes the current command.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|mixed|null
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->input = $input;
         $this->logger = new ConsoleLogger($output);
@@ -190,18 +169,13 @@ class GenerateDocumentationCommand extends Command
             $this->putDocComment($class, $this->formatter->formatDocblock($doclets));
         }
 
-        return null;
+        return 0;
     }
 
     /**
      * Sort the array using the given column.
-     *
-     * @param array $array
-     * @param string $column
-     * @param bool|null $descending
-     * @return array
      */
-    protected static function sort(array $array, string $column, $descending = false)
+    protected static function sort(array $array, string $column, bool $descending = false): array
     {
         $results = [];
 
@@ -221,12 +195,8 @@ class GenerateDocumentationCommand extends Command
 
     /**
      * Group the array by the given column.
-     *
-     * @param array $array
-     * @param string $column
-     * @return array
      */
-    protected static function group(array $array, string $column)
+    protected static function group(array $array, string $column): array
     {
         $results = [];
 
