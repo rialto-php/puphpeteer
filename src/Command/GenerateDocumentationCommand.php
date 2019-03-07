@@ -116,6 +116,10 @@ class GenerateDocumentationCommand extends Command
                 return false;
             }
 
+            if ($item['name'] === 'toString') {
+                return false;
+            }
+
             return true;
         });
     }
