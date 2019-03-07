@@ -9,7 +9,7 @@ class JsDocFormatter
      *
      * @var array
      */
-    static protected $primitives = [
+    protected $primitives = [
         '\Nesk\Rialto\Data\JsFunction',
         'string',
         'int',
@@ -28,7 +28,7 @@ class JsDocFormatter
      *
      * @var array
      */
-    static protected $typeMap = [
+    protected $typeMap = [
         'function' => '\Nesk\Rialto\Data\JsFunction',
         'Promise' => 'void',
         'Object' => 'array',
@@ -43,7 +43,17 @@ class JsDocFormatter
      *
      * @var array
      */
-    static protected $classdefs = [];
+    protected $classdefs = [];
+
+    /**
+     * JsDocFormatter constructor.
+     *
+     * @param array $classdefs
+     */
+    public function __construct(array $classdefs)
+    {
+        $this->classdefs = $classdefs;
+    }
 
     /**
      * Format a doclet as a string.
@@ -51,16 +61,16 @@ class JsDocFormatter
      * @param array $doclet
      * @return string
      */
-    public static function format(array $doclet)
+    public function format(array $doclet)
     {
         $kind = $doclet['kind'];
         $method = "format{$kind}";
 
-        if (! method_exists(static::class, $method)) {
+        if (! method_exists($this, $method)) {
             throw new \LogicException("Missing format implementation for {$kind}");
         }
 
-        return static::{$method}($doclet);
+        return $this->{$method}($doclet);
     }
 
     /**
@@ -69,17 +79,17 @@ class JsDocFormatter
      * @param array $doclet
      * @return string
      */
-    public static function formatFunction(array $doclet): string
+    public function formatFunction(array $doclet): string
     {
         $name = $doclet['name'];
         $static = $doclet['scope'] === 'static';
 
         // Format the return type.
-        $return = array_key_exists('returns', $doclet) ? static::formatType($doclet['returns'][0]['type']) : 'void';
+        $return = array_key_exists('returns', $doclet) ? $this->formatType($doclet['returns'][0]['type']) : 'void';
 
         // Format the parameters.
         $params = implode(', ', array_map(function ($param) {
-            return static::formatParam($param);
+            return $this->formatParam($param);
         }, $doclet['params'] ?? []));
 
         if ($static) {
@@ -95,12 +105,12 @@ class JsDocFormatter
      * @param array $doclet
      * @return string
      */
-    public static function formatMember(array $doclet): string
+    public function formatMember(array $doclet): string
     {
         $name = $doclet['name'];
 
         // Format the return type.
-        $return = array_key_exists('returns', $doclet) ? static::formatType($doclet['returns'][0]['type']) : 'mixed';
+        $return = array_key_exists('returns', $doclet) ? $this->formatType($doclet['returns'][0]['type']) : 'mixed';
 
         return "@property {$return} \${$name}";
     }
@@ -111,14 +121,14 @@ class JsDocFormatter
      * @param array $doclet
      * @return string
      */
-    public static function formatParam(array $doclet): string
+    public function formatParam(array $doclet): string
     {
         $name = $doclet['name'];
         $isOptional = $doclet['optional'] ?? false;
         $isVariable = $doclet['variable'] ?? false;
         $default = $doclet['defaultvalue'] ?? null;
 
-        $type = array_key_exists('type', $doclet) ? static::formatType($doclet['type']) : 'array';
+        $type = array_key_exists('type', $doclet) ? $this->formatType($doclet['type']) : 'array';
 
         if ($isVariable) {
             $type = explode('[]', $type)[0];
@@ -141,7 +151,7 @@ class JsDocFormatter
      * @param array $doclet
      * @return string
      */
-    public static function formatType(array $doclet): string
+    public function formatType(array $doclet): string
     {
         $name = $doclet['names'][0];
 
@@ -162,9 +172,9 @@ class JsDocFormatter
             $name = $matches[1];
         }
 
-        $name = static::$typeMap[$name] ?? $name;
+        $name = $this->typeMap[$name] ?? $name;
 
-        if (in_array($name, static::$classdefs) || in_array($name, static::$primitives)) {
+        if (in_array($name, $this->classdefs) || in_array($name, $this->primitives)) {
             return $name.$suffix;
         }
 
@@ -178,20 +188,10 @@ class JsDocFormatter
      * @param string[] $doclets
      * @return string
      */
-    public static function formatDocblock($doclets)
+    public function formatDocblock($doclets)
     {
         return implode(PHP_EOL, array_merge(['/**'], array_map(function ($doclet) {
             return ' * '.$doclet;
         }, $doclets), [' */']));
-    }
-
-    /**
-     * Set the array of class definitions.
-     *
-     * @param array $classdefs
-     */
-    public static function setClassdefs(array $classdefs)
-    {
-        static::$classdefs = $classdefs;
     }
 }

@@ -29,6 +29,9 @@ class GenerateDocumentationCommand extends Command
     /** @var array */
     protected $classdefs;
 
+    /** @var JsDocFormatter */
+    protected $formatter;
+
     /**
      * Configure the command.
      *
@@ -175,16 +178,16 @@ class GenerateDocumentationCommand extends Command
         $docs = $this->getDocumentation();
 
         $this->classdefs = $this->getClasses($docs);
-        JsDocFormatter::setClassdefs($this->classdefs);
+        $this->formatter = new JsDocFormatter($this->classdefs);
 
         $classes = static::group($this->getDoclets($docs), 'memberof');
 
         foreach ($classes as $class => $doclets) {
             $doclets = array_map(function ($doclet) {
-                return JsDocFormatter::format($doclet);
+                return $this->formatter->format($doclet);
             }, static::sort($doclets, 'name'));
 
-            $this->putDocComment($class, JsDocFormatter::formatDocblock($doclets));
+            $this->putDocComment($class, $this->formatter->formatDocblock($doclets));
         }
 
         return null;

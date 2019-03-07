@@ -6,6 +6,13 @@ use Nesk\Puphpeteer\Support\JsDocFormatter;
 
 class JsDocFormatterTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->formatter = new JsDocFormatter([]);
+    }
+
     /** @test */
     public function can_format_function_type()
     {
@@ -13,7 +20,7 @@ class JsDocFormatterTest extends TestCase
             'names' => ['function']
         ];
 
-        $this->assertEquals('\Nesk\Rialto\Data\JsFunction', JsDocFormatter::formatType($type));
+        $this->assertEquals('\Nesk\Rialto\Data\JsFunction', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -23,9 +30,9 @@ class JsDocFormatterTest extends TestCase
             'names' => ['string']
         ];
 
-        $this->assertEquals('string', JsDocFormatter::formatType($type));
+        $this->assertEquals('string', $this->formatter->formatType($type));
     }
-    
+
     /** @test */
     public function can_format_named_type()
     {
@@ -33,19 +40,19 @@ class JsDocFormatterTest extends TestCase
             'names' => ['ChromeArgs']
         ];
 
-        $this->assertEquals('array', JsDocFormatter::formatType($type));
+        $this->assertEquals('\Nesk\Rialto\Data\BasicResource', $this->formatter->formatType($type));
     }
 
     /** @test */
     public function can_format_puppeteer_namespaced_type()
     {
+        $this->formatter = new JsDocFormatter(['Browser']);
+
         $type = [
             'names' => ['Puppeteer.Browser']
         ];
 
-        JsDocFormatter::setClassdefs(['Browser']);
-
-        $this->assertEquals('Browser', JsDocFormatter::formatType($type));
+        $this->assertEquals('Browser', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -55,7 +62,7 @@ class JsDocFormatterTest extends TestCase
             'names' => ['Promise.<string>']
         ];
 
-        $this->assertEquals('string', JsDocFormatter::formatType($type));
+        $this->assertEquals('string', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -65,7 +72,7 @@ class JsDocFormatterTest extends TestCase
             'names' => ['Array.<string>']
         ];
 
-        $this->assertEquals('string[]', JsDocFormatter::formatType($type));
+        $this->assertEquals('string[]', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -75,7 +82,7 @@ class JsDocFormatterTest extends TestCase
             'names' => ['Set.<string>']
         ];
 
-        $this->assertEquals('string[]', JsDocFormatter::formatType($type));
+        $this->assertEquals('string[]', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -85,7 +92,7 @@ class JsDocFormatterTest extends TestCase
             'names' => ['Map.<string, boolean>']
         ];
 
-        $this->assertEquals('array', JsDocFormatter::formatType($type));
+        $this->assertEquals('array', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -95,7 +102,7 @@ class JsDocFormatterTest extends TestCase
             'names' => ['Promise.<Array.<string>>']
         ];
 
-        $this->assertEquals('string[]', JsDocFormatter::formatType($type));
+        $this->assertEquals('string[]', $this->formatter->formatType($type));
     }
 
     /** @test */
@@ -107,7 +114,7 @@ class JsDocFormatterTest extends TestCase
             'scope' => 'instance',
         ];
 
-        $this->assertEquals('@method void foo()', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo()', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -119,7 +126,7 @@ class JsDocFormatterTest extends TestCase
             'scope' => 'static',
         ];
 
-        $this->assertEquals('@method static void foo()', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method static void foo()', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -138,7 +145,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method bool foo()', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method bool foo()', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -155,7 +162,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(array $bar)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array $bar)', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -175,7 +182,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(string $bar)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(string $bar)', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -195,7 +202,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(array $bar, array $baz)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array $bar, array $baz)', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -213,7 +220,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(array $bar = [])', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array $bar = [])', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -234,7 +241,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(string $bar = null)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(string $bar = null)', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -256,7 +263,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(string $bar = \'baz\')', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(string $bar = \'baz\')', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -274,7 +281,7 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@method void foo(array ...$args)', JsDocFormatter::format($doclet));
+        $this->assertEquals('@method void foo(array ...$args)', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -285,7 +292,7 @@ class JsDocFormatterTest extends TestCase
             'name' => 'foo'
         ];
 
-        $this->assertEquals('@property mixed $foo', JsDocFormatter::format($doclet));
+        $this->assertEquals('@property mixed $foo', $this->formatter->format($doclet));
     }
 
     /** @test */
@@ -303,9 +310,9 @@ class JsDocFormatterTest extends TestCase
             ],
         ];
 
-        $this->assertEquals('@property string $foo', JsDocFormatter::format($doclet));
+        $this->assertEquals('@property string $foo', $this->formatter->format($doclet));
     }
-    
+
     /** @test @expectedException \LogicException */
     public function throws_exception_when_format_method_not_implemented()
     {
@@ -313,6 +320,6 @@ class JsDocFormatterTest extends TestCase
             'kind' => 'foobar',
         ];
 
-        JsDocFormatter::format($doclet);
+        $this->formatter->format($doclet);
     }
 }
