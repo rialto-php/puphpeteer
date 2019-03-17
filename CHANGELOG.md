@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 **Note:** PuPHPeteer is heavily based on [Rialto](https://github.com/nesk/rialto). For a complete overview of the changes, you might want to check out [Rialto's changelog](https://github.com/nesk/rialto/blob/master/CHANGELOG.md) too.
 
 ## [Unreleased]
+_In progress…_
+
+## [1.5.0] - 2019-03-17
 ### Added
 - Support Puppeteer v1.13
 - Make the `ElementHandle` resource extend the `JSHandle` one
@@ -86,7 +89,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 First release
 
 
-[Unreleased]: https://github.com/nesk/puphpeteer/compare/1.4.1...HEAD
+[Unreleased]: https://github.com/nesk/puphpeteer/compare/1.5.0...HEAD
+[1.5.0]: https://github.com/nesk/puphpeteer/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/nesk/puphpeteer/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/nesk/puphpeteer/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/nesk/puphpeteer/compare/1.2.0...1.3.0
