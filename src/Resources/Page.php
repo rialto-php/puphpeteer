@@ -39,6 +39,11 @@ use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
  * @property Mouse $mouse
  * @method \Nesk\Rialto\Data\BasicResource pdf(\Nesk\Rialto\Data\BasicResource $options = null)
  * @method JSHandle queryObjects(JSHandle $prototypeHandle)
+ * @method ElementHandle querySelector(string $selector)
+ * @method ElementHandle[] querySelectorAll(string $selector)
+ * @method \Nesk\Rialto\Data\BasicResource querySelectorAllEval(string $selector, \Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method \Nesk\Rialto\Data\BasicResource querySelectorEval(string $selector, \Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method ElementHandle[] querySelectorXPath(string $expression)
  * @method Response reload(array $options)
  * @method \Nesk\Rialto\Data\BasicResource screenshot(\Nesk\Rialto\Data\BasicResource $options = null)
  * @method string[] select(string $selector, string ...$values)

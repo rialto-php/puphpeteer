@@ -91,7 +91,7 @@ class GenerateDocumentationCommand extends Command
      */
     protected function getDoclets(array $docs): array
     {
-        return array_filter($docs, function ($item) {
+        $doclets = array_filter($docs, function ($item) {
             if (! in_array($item['memberof'] ?? null, $this->classdefs)) {
                 return false;
             }
@@ -112,7 +112,7 @@ class GenerateDocumentationCommand extends Command
                 return false;
             }
 
-            if ($item['name'][0] === '_' || $item['name'][0] === '$') {
+            if ($item['name'][0] === '_') {
                 return false;
             }
 
@@ -122,6 +122,20 @@ class GenerateDocumentationCommand extends Command
 
             return true;
         });
+
+        $doclets = array_map(function ($item) {
+            $item['name'] = preg_replace_callback('/^(\${1,2})(?:(\w)(.*)|$)/', function ($matches) {
+                $invalidCharsReplacement = $matches[1] === '$' ? 'querySelector' : 'querySelectorAll';
+                $firstAlphaLetter = strtoupper($matches[2] ?? '');
+                $nameEnd = empty($matches[3]) && $firstAlphaLetter === 'X' ? 'Path' : $matches[3] ?? '';
+
+                return "{$invalidCharsReplacement}{$firstAlphaLetter}{$nameEnd}";
+            }, $item['name']);
+
+            return $item;
+        }, $doclets);
+
+        return $doclets;
     }
 
     /**
