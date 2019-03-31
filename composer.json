@@ -28,6 +28,7 @@
         "codedungeon/phpunit-result-printer": ">=0.6 <1.0",
         "monolog/monolog": "^1.23",
         "phpunit/phpunit": "^6.5|^7.0",
+        "symfony/console": "^4.2",
         "symfony/process": "^4.0"
     },
     "autoload": {
