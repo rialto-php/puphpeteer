@@ -1,8 +1,9 @@
 <?php
 
-namespace Nesk\Puphpeteer\Tests;
+namespace Nesk\Puphpeteer\Tests\Support;
 
 use Nesk\Puphpeteer\Support\DocumentationFormatter;
+use Nesk\Puphpeteer\Tests\TestCase;
 
 class DocumentationFormatterTest extends TestCase
 {
