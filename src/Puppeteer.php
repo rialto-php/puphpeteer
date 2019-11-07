@@ -22,7 +22,7 @@ class Puppeteer extends AbstractEntryPoint
     ];
 
     /**
-     * Instanciate Puppeteer's entry point.
+     * Instantiate Puppeteer's entry point.
      */
     public function __construct(array $userOptions = [])
     {
