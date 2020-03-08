@@ -1,6 +1,6 @@
 {
   "name": "@nesk/puphpeteer",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "A Puppeteer bridge for PHP, supporting the entire API.",
   "keywords": [
     "php",
@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "@nesk/rialto": "^1.2.1",
-    "puppeteer": "~1.18.0"
+    "puppeteer": "~1.17.0"
   }
 }
