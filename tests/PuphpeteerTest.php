@@ -18,7 +18,7 @@ class PuphpeteerTest extends TestCase
         $this->url = "http://{$this->host}";
         $this->serverDir = __DIR__.'/resources';
 
-        $this->servingProcess = new Process("php -S {$this->host} -t {$this->serverDir}");
+        $this->servingProcess = new Process(['php', '-S', $this->host, '-t', $this->serverDir]);
         $this->servingProcess->start();
 
         // Chrome doesn't support Linux sandbox on many CI environments
