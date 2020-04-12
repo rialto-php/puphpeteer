@@ -1,4 +1,4 @@
-# PuPHPeteer
+# PuPHPeteer – SEARCHING FOR A NEW MAINTAINER
 
 <img src="https://user-images.githubusercontent.com/817508/41925638-6f1b9dde-796d-11e8-8f87-3646f0c89750.png" style="max-width:100%;" width="190px" align="right">
 
@@ -7,6 +7,8 @@
 [![Node Version](https://img.shields.io/node/v/@nesk/puphpeteer.svg?style=flat-square&label=Node)](https://nodejs.org/)
 [![NPM Version](https://img.shields.io/npm/v/@nesk/puphpeteer.svg?style=flat-square&label=NPM)](https://www.npmjs.com/package/@nesk/puphpeteer)
 [![Build Status](https://img.shields.io/travis/nesk/puphpeteer.svg?style=flat-square&label=Build%20Status)](https://travis-ci.org/nesk/puphpeteer)
+
+>PuPHPeteer is searching for a new maintainer, I don't have time or motivation to maintain this project anymore. Please [contact me](https://github.com/nesk) if you're interested.
 
 A [Puppeteer](https://github.com/GoogleChrome/puppeteer/) bridge for PHP, supporting the entire API. Based on [Rialto](https://github.com/nesk/rialto/), a package to manage Node resources from PHP.
 
