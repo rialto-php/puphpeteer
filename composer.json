@@ -25,7 +25,6 @@
         "vierbergenlars/php-semver": "^3.0.2"
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": ">=0.6 <1.0",
         "monolog/monolog": "^1.23",
         "phpunit/phpunit": "^6.5|^7.0",
         "symfony/process": "^4.0|^5.0"
