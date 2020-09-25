@@ -68,7 +68,7 @@ npm install @nesk/puphpeteer
 
 ## Notable differences between PuPHPeteer and Puppeteer
 
-### Puppeteer's class must be instanciated
+### Puppeteer's class must be instantiated
 
 Instead of requiring Puppeteer:
 
@@ -76,7 +76,7 @@ Instead of requiring Puppeteer:
 const puppeteer = require('puppeteer');
 ```
 
-You have to instanciate the `Puppeteer` class:
+You have to instantiate the `Puppeteer` class:
 
 ```php
 $puppeteer = new Puppeteer;
@@ -140,7 +140,7 @@ $pageFunction = JsFunction::createWithParameters(['element'])
     ->body("return element.textContent");
 ```
 
-### Exceptions must be catched with `->tryCatch`
+### Exceptions must be caught with `->tryCatch`
 
 If an error occurs in Node, a `Node\FatalException` will be thrown and the process closed, you will have to create a new instance of `Puppeteer`.
 
