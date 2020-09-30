@@ -133,7 +133,7 @@ class PuphpeteerTest extends TestCase
         if (empty($incompleteResources)) return;
 
         $incompleteText = "The following resources have not been tested properly, probably"
-            ." for good reasons but you might want to have a look:";
+            ." for good reasons but you might want to have a look:\n";
 
         foreach ($incompleteResources as $name => $resource) {
             if ($resource instanceof UntestableResource) {
