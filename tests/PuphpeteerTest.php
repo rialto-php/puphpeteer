@@ -4,7 +4,6 @@ namespace Nesk\Puphpeteer\Tests;
 
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
-use Symfony\Component\Process\Process;
 use PHPUnit\Framework\ExpectationFailedException;
 use Nesk\Puphpeteer\Resources\ElementHandle;
 
@@ -14,29 +13,11 @@ class PuphpeteerTest extends TestCase
     {
         parent::setUp();
 
-        $this->host = '127.0.0.1:8089';
-        $this->url = "http://{$this->host}";
-        $this->serverDir = __DIR__.'/resources';
+        // Serve the content of the "/resources"-folder to test these.
+        $this->serveResources();
 
-        $this->servingProcess = new Process(['php', '-S', $this->host, '-t', $this->serverDir]);
-        $this->servingProcess->start();
-
-        // Chrome doesn't support Linux sandbox on many CI environments
-        // See: https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#chrome-headless-fails-due-to-sandbox-issues
-        $this->browserOptions = ['args' => ['--no-sandbox', '--disable-setuid-sandbox']];
-
-        if ($this->canPopulateProperty('browser')) {
-            $this->browser = (new Puppeteer)->launch($this->browserOptions);
-        }
-    }
-
-    public function tearDown(): void
-    {
-        if (isset($this->browser)) {
-            $this->browser->close();
-        }
-
-        $this->servingProcess->stop(0);
+        // Launch the browser to run tests on.
+        $this->launchBrowser();
     }
 
     /** @test */
