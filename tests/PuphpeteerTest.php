@@ -108,10 +108,10 @@ class PuphpeteerTest extends TestCase
     public function check_all_resources_are_supported()
     {
         $incompleteResources = [];
-        $resourceInstanciator = new ResourceInstanciator($this->browserOptions, $this->url);
+        $resourceInstantiator = new ResourceInstantiator($this->browserOptions, $this->url);
 
-        foreach ($resourceInstanciator->getResourceNames() as $name) {
-            $resource = $resourceInstanciator->{$name}(new Puppeteer, $this->browserOptions);
+        foreach ($resourceInstantiator->getResourceNames() as $name) {
+            $resource = $resourceInstantiator->{$name}(new Puppeteer, $this->browserOptions);
 
             if ($resource instanceof UntestableResource) {
                 $incompleteResources[$name] = $resource;

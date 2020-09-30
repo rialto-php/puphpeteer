@@ -4,7 +4,7 @@ namespace Nesk\Puphpeteer\Tests;
 
 use Nesk\Rialto\Data\JsFunction;
 
-class ResourceInstanciator
+class ResourceInstantiator
 {
     protected $resources = [];
 
