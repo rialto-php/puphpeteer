@@ -49,22 +49,22 @@ class DownloadTest extends TestCase
      *
      * @test
      */
-    public function download_large_image()
-    {
-        // Download the image
-        $page = $this->browser
-            ->newPage()
-            ->goto($this->url . '/denys-barabanov-jKcFmXCfaQ8-unsplash.jpg');
+    // public function download_large_image()
+    // {
+    //     // Download the image
+    //     $page = $this->browser
+    //         ->newPage()
+    //         ->goto($this->url . '/denys-barabanov-jKcFmXCfaQ8-unsplash.jpg');
 
-        $base64 = $page->buffer()->toString('base64');
-        $imageString = base64_decode($base64);
+    //     $base64 = $page->buffer()->toString('base64');
+    //     $imageString = base64_decode($base64);
 
-        // Get the reference image from resources
-        $reference = file_get_contents('tests/resources/denys-barabanov-jKcFmXCfaQ8-unsplash.jpg');
+    //     // Get the reference image from resources
+    //     $reference = file_get_contents('tests/resources/denys-barabanov-jKcFmXCfaQ8-unsplash.jpg');
 
-        $this->assertTrue(
-            mb_strlen($reference) === mb_strlen($imageString),
-            'Large image is not the same length after download.'
-        );
-    }
+    //     $this->assertTrue(
+    //         mb_strlen($reference) === mb_strlen($imageString),
+    //         'Large image is not the same length after download.'
+    //     );
+    // }
 }
