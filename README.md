@@ -57,7 +57,7 @@ $browser->close();
 
 ## Requirements and installation
 
-This package requires PHP >= 7.1 and Node >= 8.
+This package requires PHP >= 7.2 and Node >= 8.
 
 Install it with these two command lines:
 
