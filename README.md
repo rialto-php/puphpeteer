@@ -6,7 +6,7 @@
 [![Composer Version](https://img.shields.io/packagist/v/nesk/puphpeteer.svg?style=flat-square&label=Composer)](https://packagist.org/packages/nesk/puphpeteer)
 [![Node Version](https://img.shields.io/node/v/@nesk/puphpeteer.svg?style=flat-square&label=Node)](https://nodejs.org/)
 [![NPM Version](https://img.shields.io/npm/v/@nesk/puphpeteer.svg?style=flat-square&label=NPM)](https://www.npmjs.com/package/@nesk/puphpeteer)
-[![Build Status](https://img.shields.io/travis/nesk/puphpeteer.svg?style=flat-square&label=Build%20Status)](https://travis-ci.org/nesk/puphpeteer)
+[![Build Status](https://img.shields.io/github/workflow/status/rialto-php/puphpeteer/phpunit?style=flat-square&label=Build%20Status)](https://github.com/rialto-php/puphpeteer/actions)
 
 >PuPHPeteer is searching for a new maintainer, I don't have time or motivation to maintain this project anymore. Please [contact me](https://github.com/nesk) if you're interested.
 
@@ -57,7 +57,7 @@ $browser->close();
 
 ## Requirements and installation
 
-This package requires PHP >= 7.1 and Node >= 8.
+This package requires PHP >= 7.2 and Node >= 8.
 
 Install it with these two command lines:
 
