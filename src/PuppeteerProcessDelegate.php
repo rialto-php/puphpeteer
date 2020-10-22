@@ -14,6 +14,12 @@ class PuppeteerProcessDelegate implements ShouldHandleProcessDelegation
      */
     public function resourceFromOriginalClassName(string $className): ?string
     {
+		if ($className === 'HTTPResponse') {
+			$className = 'Response';
+		} elseif ($className === 'HTTPRequest') {
+			$className = 'Request';
+		}
+
         $class = "Nesk\\Puphpeteer\\Resources\\$className";
 
         return class_exists($class) ? $class : null;
