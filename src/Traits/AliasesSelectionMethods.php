@@ -2,20 +2,26 @@
 
 namespace Nesk\Puphpeteer\Traits;
 
+use Nesk\Puphpeteer\Resources\ElementHandle;
+
 trait AliasesSelectionMethods
 {
-    public function querySelector(...$arguments)
-    {
-        return $this->__call('$', $arguments);
-    }
+	public function querySelector(string $selector): ?ElementHandle
+	{
+		return $this->__call('$', [$selector]);
+	}
 
-    public function querySelectorAll(...$arguments)
-    {
-        return $this->__call('$$', $arguments);
-    }
+	/**
+	 * @param string $selector
+	 * @return ElementHandle[]
+	 */
+	public function querySelectorAll(string $selector): array
+	{
+		return $this->__call('$$', [$selector]);
+	}
 
-    public function querySelectorXPath(...$arguments)
-    {
-        return $this->__call('$x', $arguments);
-    }
+	public function querySelectorXPath(string $expression): array
+	{
+		return $this->__call('$x', [$expression]);
+	}
 }
