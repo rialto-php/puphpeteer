@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Mouse
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void click(int $x, int $y, array $options = [])

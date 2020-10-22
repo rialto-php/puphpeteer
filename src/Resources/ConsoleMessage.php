@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class ConsoleMessage
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method JSHandle[] args()

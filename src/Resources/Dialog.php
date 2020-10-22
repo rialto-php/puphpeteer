@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Dialog
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void accept(?string $promptText = null)

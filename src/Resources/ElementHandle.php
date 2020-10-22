@@ -2,12 +2,13 @@
 
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
 use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
+use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
 use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class ElementHandle
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method ElementHandle asElement()

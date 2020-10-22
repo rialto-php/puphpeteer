@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Coverage
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void startCSSCoverage(array $options = [])

@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Tracing
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void start(array $options = [])

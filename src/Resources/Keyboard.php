@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Keyboard
+ *
  * @package Scrappper\Resources
  *
  * @method void down(string $key, array $options = [])

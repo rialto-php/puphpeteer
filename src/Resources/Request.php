@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Request
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void abort(string $errorCode)

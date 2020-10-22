@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Response
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method BasicResource buffer()

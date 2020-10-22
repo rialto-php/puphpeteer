@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Worker
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method ExecutionContext executionContext()

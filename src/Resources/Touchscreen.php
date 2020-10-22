@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Touchscreen
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void tap(int $x, int $y)

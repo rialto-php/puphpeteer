@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class Browser
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method Page newPage()

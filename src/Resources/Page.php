@@ -2,13 +2,14 @@
 
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
-use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
 use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
+use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
+use Nesk\Rialto\Data\BasicResource;
 use Nesk\Rialto\Data\JsFunction;
 
 /**
  * Class Page
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @property-read Accessibility accessibility

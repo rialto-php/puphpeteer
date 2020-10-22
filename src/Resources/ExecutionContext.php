@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class ExecutionContext
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method Frame|null frame()

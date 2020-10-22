@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class BrowserFetcher
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method bool canDownload(string $revision)

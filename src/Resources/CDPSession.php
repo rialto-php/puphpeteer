@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class CDPSession
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method void detach()

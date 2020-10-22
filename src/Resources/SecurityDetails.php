@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class SecurityDetails
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method string issuer()

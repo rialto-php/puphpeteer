@@ -6,6 +6,7 @@ use Nesk\Rialto\Data\BasicResource;
 
 /**
  * Class JSHandle
+ *
  * @package Nesk\Puphpeteer\Resources
  *
  * @method ElementHandle|null asElement()
