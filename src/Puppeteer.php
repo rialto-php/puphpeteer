@@ -2,11 +2,22 @@
 
 namespace Nesk\Puphpeteer;
 
+use Nesk\Puphpeteer\Resources\Browser;
+use Nesk\Puphpeteer\Resources\BrowserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 use Nesk\Rialto\AbstractEntryPoint;
 use vierbergenlars\SemVer\{version, expression, SemVerException};
 
+/**
+ * Class PhpPupeeteer
+ *
+ * @method Browser launch(array $options = [])
+ * @method Browser connect(array $options = [])
+ * @method BrowserFetcher createBrowserFetcher(array $options = [])
+ * @method array defaultArgs(array $options = [])
+ * @method string executablePath()
+ */
 class Puppeteer extends AbstractEntryPoint
 {
     /**
