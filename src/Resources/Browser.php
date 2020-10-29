@@ -10,6 +10,7 @@ use Nesk\Rialto\Data\BasicResource;
  * @method BrowserContext createIncognitoBrowserContext()
  * @method BrowserContext defaultBrowserContext()
  * @method void disconnect()
+ * @method bool isConnected()
  * @method Page newPage()
  * @method Page[] pages()
  * @method \Nesk\Rialto\Data\BasicResource|null process()
