@@ -12,6 +12,7 @@ use Nesk\Rialto\Data\BasicResource;
  * @method Page page()
  * @method \Nesk\Rialto\Data\BasicResource type()
  * @method string url()
+ * @method Worker worker()
  */
 class Target extends BasicResource
 {
