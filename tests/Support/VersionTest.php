@@ -6,7 +6,7 @@ use Nesk\Puphpeteer\Support\Version;
 use Nesk\Puphpeteer\Tests\TestCase;
 use org\bovigo\vfs\vfsStream;
 
-class DocumentationFormatterTest extends TestCase
+class VersionTest extends TestCase
 {
     private const STREAM_NAME = 'puphpeteer';
     private const PACKAGE_PATH = self::STREAM_NAME.'/node_modules/puppeteer/package.json';
