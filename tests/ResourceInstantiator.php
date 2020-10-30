@@ -46,6 +46,12 @@ class ResourceInstantiator
             'Frame' => function ($puppeteer) {
                 return $this->Page($puppeteer)->mainFrame();
             },
+            'HTTPRequest' => function ($puppeteer) {
+                return $this->HTTPResponse($puppeteer)->request();
+            },
+            'HTTPResponse' => function ($puppeteer) {
+                return $this->Page($puppeteer)->goto($this->url);
+            },
             'JSHandle' => function ($puppeteer) {
                 return $this->Page($puppeteer)->evaluateHandle(JsFunction::createWithBody('window'));
             },
@@ -57,12 +63,6 @@ class ResourceInstantiator
             },
             'Page' => function ($puppeteer) {
                 return $this->Browser($puppeteer)->newPage();
-            },
-            'Request' => function ($puppeteer) {
-                return $this->Response($puppeteer)->request();
-            },
-            'Response' => function ($puppeteer) {
-                return $this->Page($puppeteer)->goto($this->url);
             },
             'SecurityDetails' => function ($puppeteer) {
                 return new RiskyResource(function () use ($puppeteer) {
@@ -81,7 +81,7 @@ class ResourceInstantiator
             'Tracing' => function ($puppeteer) {
                 return $this->Page($puppeteer)->tracing;
             },
-            'Worker' => function ($puppeteer) {
+            'WebWorker' => function ($puppeteer) {
                 $page = $this->Page($puppeteer);
                 $page->goto($this->url, ['waitUntil' => 'networkidle0']);
                 return $page->workers()[0];
