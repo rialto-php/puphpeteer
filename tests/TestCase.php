@@ -19,7 +19,8 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $testMethod = new \ReflectionMethod($this, $this->getName());
+        $methodName = explode(' ', $this->getName())[0] ?? '';
+        $testMethod = new \ReflectionMethod($this, $methodName);
         $docComment = $testMethod->getDocComment();
 
         if (preg_match('/@dontPopulateProperties (.*)/', $docComment, $matches)) {
