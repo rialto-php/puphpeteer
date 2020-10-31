@@ -103,56 +103,57 @@ class PuphpeteerTest extends TestCase
 
     /**
      * @test
+     * @dataProvider resourceProvider
      * @dontPopulateProperties browser
      */
-    public function check_all_resources_are_supported()
+    public function check_all_resources_are_supported(string $name)
     {
-        $incompleteResources = [];
+        $incompleteTest = false;
         $resourceInstantiator = new ResourceInstantiator($this->browserOptions, $this->url);
+        $resource = $resourceInstantiator->{$name}(new Puppeteer, $this->browserOptions);
 
-        foreach ($resourceInstantiator->getResourceNames() as $name) {
-            $resource = $resourceInstantiator->{$name}(new Puppeteer, $this->browserOptions);
-
-            if ($resource instanceof UntestableResource) {
-                $incompleteResources[$name] = $resource;
-            } else if ($resource instanceof RiskyResource) {
-                if (!empty($resource->exception())) {
-                    $incompleteResources[$name] = $resource;
-                } else {
-                    try {
-                        $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource->value());
-                    } catch (ExpectationFailedException $exception) {
-                        $incompleteResources[$name] = $resource;
-                    }
-                }
+        if ($resource instanceof UntestableResource) {
+            $incompleteTest = true;
+        } else if ($resource instanceof RiskyResource) {
+            if (!empty($resource->exception())) {
+                $incompleteTest = true;
             } else {
-                $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource);
+                try {
+                    $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource->value());
+                } catch (ExpectationFailedException $exception) {
+                    $incompleteTest = true;
+                }
+            }
+        } else {
+            $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource);
+        }
+
+        if (!$incompleteTest) return;
+
+        $reason = "The \"$name\" resource has not been tested properly, probably"
+            ." for a good reason but you might want to have a look: \n\n    ";
+
+        if ($resource instanceof UntestableResource) {
+            $reason .= "\e[33mMarked as untestable.\e[0m";
+        } else {
+            if (!empty($exception = $resource->exception())) {
+                $reason .= "\e[31mMarked as risky because of a Node error: {$exception->getMessage()}\e[0m";
+            } else {
+                $value = print_r($resource->value(), true);
+                $reason .= "\e[31mMarked as risky because of an unexpected value: $value\e[0m";
             }
         }
 
-        if (empty($incompleteResources)) return;
+        $this->markTestIncomplete($reason);
+    }
 
-        $incompleteText = "The following resources have not been tested properly, probably"
-            ." for good reasons but you might want to have a look:\n";
+    public function resourceProvider(): \Generator
+    {
+        $resourceNames = (new ResourceInstantiator([], ''))->getResourceNames();
 
-        foreach ($incompleteResources as $name => $resource) {
-            if ($resource instanceof UntestableResource) {
-                $reason = "Marked as untestable";
-            } else if ($resource instanceof RiskyResource) {
-                if (!empty($exception = $resource->exception())) {
-                    $reason = "Marked as risky because of a Node error: {$exception->getMessage()}";
-                } else {
-                    $value = print_r($resource->value(), true);
-                    $reason = "Marked as risky because of an unexpected value: $value";
-                }
-            } else {
-                $reason = "Unknow reason";
-            }
-
-            $incompleteText .= "\n  • $name - $reason";
+        foreach ($resourceNames as $name) {
+            yield [$name];
         }
-
-        $this->markTestIncomplete($incompleteText);
     }
 
     /**
