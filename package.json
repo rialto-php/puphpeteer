@@ -24,5 +24,9 @@
   "dependencies": {
     "@nesk/rialto": "^1.2.1",
     "puppeteer": "~5.4.1"
+  },
+  "devDependencies": {
+    "@types/yargs": "^15.0.10",
+    "yargs": "^16.1.1"
   }
 }
