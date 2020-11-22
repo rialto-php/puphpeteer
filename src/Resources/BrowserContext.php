@@ -2,9 +2,7 @@
 
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
-
-class BrowserContext extends BasicResource
+class BrowserContext extends EventEmitter
 {
     //
 }

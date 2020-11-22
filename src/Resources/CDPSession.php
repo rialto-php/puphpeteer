@@ -2,9 +2,7 @@
 
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
-
-class CDPSession extends BasicResource
+class CDPSession extends EventEmitter
 {
     //
 }

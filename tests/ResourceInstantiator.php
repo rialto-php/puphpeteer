@@ -40,6 +40,9 @@ class ResourceInstantiator
             'ElementHandle' => function ($puppeteer) {
                 return $this->Page($puppeteer)->querySelector('body');
             },
+            'EventEmitter' => function ($puppeteer) {
+                return $puppeteer->launch($this->browserOptions);
+            },
             'ExecutionContext' => function ($puppeteer) {
                 return $this->Frame($puppeteer)->executionContext();
             },
