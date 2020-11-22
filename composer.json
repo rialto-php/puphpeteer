@@ -25,7 +25,7 @@
         "vierbergenlars/php-semver": "^3.0.2"
     },
     "require-dev": {
-        "monolog/monolog": "^1.23",
+        "monolog/monolog": "^2.0",
         "phpunit/phpunit": "^6.5|^7.0",
         "symfony/process": "^4.0|^5.0"
     },
