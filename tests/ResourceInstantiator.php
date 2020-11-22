@@ -43,6 +43,9 @@ class ResourceInstantiator
             'ExecutionContext' => function ($puppeteer) {
                 return $this->Frame($puppeteer)->executionContext();
             },
+            'FileChooser' => function () {
+                return new UntestableResource;
+            },
             'Frame' => function ($puppeteer) {
                 return $this->Page($puppeteer)->mainFrame();
             },
