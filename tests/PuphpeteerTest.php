@@ -6,6 +6,7 @@ use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 use PHPUnit\Framework\ExpectationFailedException;
 use Nesk\Puphpeteer\Resources\ElementHandle;
+use Psr\Log\LoggerInterface;
 
 class PuphpeteerTest extends TestCase
 {
@@ -156,30 +157,63 @@ class PuphpeteerTest extends TestCase
         }
     }
 
+    private function createBrowserLogger(callable $onBrowserLog): LoggerInterface
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::atLeastOnce())
+            ->method('log')
+            ->willReturn(self::returnCallback(function (string $level, string $message) use ($onBrowserLog) {
+                if (\strpos($message, "Received a Browser log:") === 0) {
+                    $onBrowserLog();
+                }
+
+                return null;
+            }));
+
+        return $logger;
+    }
+
     /**
      * @test
      * @dontPopulateProperties browser
      */
-    public function browser_console_calls_are_logged()
+    public function browser_console_calls_are_logged_if_enabled()
     {
-        $setups = [
-            [false, function ($browser) { return $browser->newPage(); }, 'Received data from the port'],
-            [true, function ($browser) { return $browser->newPage(); }, 'Received a Browser log:'],
-            [true, function ($browser) { return $browser->pages()[0]; }, 'Received a Browser log:'],
-        ];
+        $browserLogOccured = false;
+        $logger = $this->createBrowserLogger(function () use (&$browserLogOccured) {
+            $browserLogOccured = true;
+        });
 
-        foreach ($setups as [$shoulLogBrowserConsole, $pageFactory, $startsWith]) {
-            $puppeteer = new Puppeteer([
-                'log_browser_console' => $shoulLogBrowserConsole,
-                'logger' => $this->loggerMock(
-                    $this->at(9),
-                    $this->isLogLevel(),
-                    $this->stringStartsWith($startsWith)
-                ),
-            ]);
+        $puppeteer = new Puppeteer([
+            'log_browser_console' => true,
+            'logger' => $logger,
+        ]);
 
-            $this->browser = $puppeteer->launch($this->browserOptions);
-            $pageFactory($this->browser)->goto($this->url);
-        }
+        $this->browser = $puppeteer->launch($this->browserOptions);
+        $this->browser->pages()[0]->goto($this->url);
+
+        static::assertTrue($browserLogOccured);
+    }
+
+    /**
+     * @test
+     * @dontPopulateProperties browser
+     */
+    public function browser_console_calls_are_not_logged_if_disabled()
+    {
+        $browserLogOccured = false;
+        $logger = $this->createBrowserLogger(function () use (&$browserLogOccured) {
+            $browserLogOccured = true;
+        });
+
+        $puppeteer = new Puppeteer([
+            'log_browser_console' => false,
+            'logger' => $logger,
+        ]);
+
+        $this->browser = $puppeteer->launch($this->browserOptions);
+        $this->browser->pages()[0]->goto($this->url);
+
+        static::assertFalse($browserLogOccured);
     }
 }
