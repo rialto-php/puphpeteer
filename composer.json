@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "nesk/rialto": "^1.2.0",
         "psr/log": "^1.0",
         "vierbergenlars/php-semver": "^3.0.2"
