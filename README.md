@@ -1,6 +1,6 @@
 # PuPHPeteer
 
-<img src="https://user-images.githubusercontent.com/817508/41925638-6f1b9dde-796d-11e8-8f87-3646f0c89750.png" style="max-width:100%;" width="190px" align="right">
+<img src="https://user-images.githubusercontent.com/817508/100672192-dd258500-3361-11eb-845f-e8b5109752e4.png" style="max-width:100%;" width="190px" align="right">
 
 [![PHP Version](https://img.shields.io/packagist/php-v/nesk/puphpeteer.svg?style=flat-square)](http://php.net/)
 [![Composer Version](https://img.shields.io/packagist/v/nesk/puphpeteer.svg?style=flat-square&label=Composer)](https://packagist.org/packages/nesk/puphpeteer)
