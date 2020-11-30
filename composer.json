@@ -45,12 +45,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Nesk\\Puphpeteer\\PuphpeteerServiceProvider"
-            ]
-        }
     }
 }
