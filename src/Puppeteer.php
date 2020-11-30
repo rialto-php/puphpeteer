@@ -30,8 +30,9 @@ class Puppeteer extends AbstractEntryPoint
             $this->checkPuppeteerVersion($userOptions['executable_path'] ?? 'node', $userOptions['logger']);
         }
 
+        $delegate_file = ($userOptions['delegate_file']) ?? __DIR__.'/PuppeteerConnectionDelegate.js';
         parent::__construct(
-            __DIR__.'/PuppeteerConnectionDelegate.js',
+            $delegate_file,
             new PuppeteerProcessDelegate,
             $this->options,
             $userOptions
