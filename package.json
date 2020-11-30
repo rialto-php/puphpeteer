@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@nesk/rialto": "^1.2.1",
-    "puppeteer": "~1.18.0",
-    "puppeteer-extra-plugin-stealth": "^2.6.5"
+    "puppeteer": "~1.18.0"
   }
 }
