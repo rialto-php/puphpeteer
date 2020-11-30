@@ -8,7 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 **Note:** PuPHPeteer is heavily based on [Rialto](https://github.com/nesk/rialto). For a complete overview of the changes, you might want to check out [Rialto's changelog](https://github.com/nesk/rialto/blob/master/CHANGELOG.md) too.
 
 ## [Unreleased]
-_In progress…_
+### Added
+- Support Puppeteer v5.5
+- Support PHP 8
+- Add documentation on all resources to provide autocompletion in IDEs
+
+### Removed
+- Drop support for PHP 7.1 and 7.2
 
 ## [1.6.0] - 2019-07-01
 ### Added
