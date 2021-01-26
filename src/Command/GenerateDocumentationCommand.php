@@ -72,7 +72,7 @@ final class GenerateDocumentationCommand extends Command
 
     private static function getResourceNames(): array
     {
-        return array_map(function (string $filePath): string {
+        return array_map(static function (string $filePath): string {
             return explode('.', \basename($filePath))[0];
         }, \glob(self::RESOURCES_DIR.'/*'));
     }
