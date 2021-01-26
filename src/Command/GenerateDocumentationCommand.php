@@ -60,7 +60,7 @@ final class GenerateDocumentationCommand extends Command
                 ['node', self::BUILD_DIR.'/'.self::DOC_FILE_NAME.'.js', 'php'],
                 $commonFiles,
                 $nodeFiles,
-                ['--resources-namespace', self::RESOURCES_NAMESPACE, '--resources'],
+                ['--resources-namespace', '', '--resources'],
                 $resourceNames
             )
         );

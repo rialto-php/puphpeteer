@@ -5,11 +5,11 @@ namespace Nesk\Puphpeteer\Resources;
 use Nesk\Rialto\Data\BasicResource;
 
 /**
- * @method void move(float $x, float $y, array{ steps: float } $options = null)
- * @method void click(float $x, float $y, array<string, mixed>&array{ delay: float } $options = null)
- * @method void down(array<string, mixed> $options = null)
- * @method void up(array<string, mixed> $options = null)
- * @method void wheel(array<string, mixed> $options = null)
+ * @method void move(float $x, float $y, array $options = [])
+ * @method void click(float $x, float $y, array $options = [])
+ * @method void down(array $options = [])
+ * @method void up(array $options = [])
+ * @method void wheel(array $options = [])
  */
 class Mouse extends BasicResource
 {

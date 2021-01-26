@@ -119,7 +119,7 @@ class JsDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatGeneric(parentType: string, argumentTypes: string[], context?: TypeContext): string {
-        return `${parentType}<${argumentTypes.join(', ')}>`;
+        return `${parentType}|${argumentTypes.join('[]|')}[]`;
     }
 
     formatQualifiedName(left: string, right: string): string {
@@ -170,7 +170,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatAnonymousFunction(parameters: string, returnType: string): string {
-        return `callable(${parameters}): ${returnType}`;
+        return `JSHandle`;
     }
 
     formatFunction(name: string, parameters: string, returnType: string): string {
@@ -182,7 +182,17 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
             type = type.slice(0, -2);
         }
 
-        const defaultValue = isOptional ? ' = null' : '';
+        let defaultValue;
+
+        switch (type) {
+            case 'array' :
+                defaultValue = isOptional ? ' = []' : '';
+                break;
+            default:
+                defaultValue = isOptional ? ' = null' : '';
+                break;
+        }
+
         return `${type} ${isVariadic ? '...' : ''}\$${name}${defaultValue}`;
     }
 
@@ -226,21 +236,21 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
 
         // Prefix PHP resources with their namespace
         if (this.resources.includes(type)) {
-            return `\\${this.resourcesNamespace}\\${type}`;
+            return this.resourcesNamespace ? `\\${this.resourcesNamespace}\\${type}` : type;
         }
 
         // If the type ends with "options" then convert it to an associative array
         if (/options$/i.test(type)) {
-            return 'array<string, mixed>';
+            return 'array';
         }
 
         // Types ending with "Fn" are always callables or strings
         if (type.endsWith('Fn')) {
-            return this.formatUnion(['callable', 'string']);
+            return this.formatUnion(['JSHandle', 'string']);
         }
 
         if (type === 'Function') {
-            return 'callable';
+            return 'JSHandle';
         }
 
         if (type === 'PuppeteerLifeCycleEvent') {
@@ -278,7 +288,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
             parentType = 'array';
         }
 
-        return `${parentType}<${argumentTypes.join(', ')}>`;
+        return `${parentType}|${argumentTypes.join('[]|')}[]`;
     }
 
     formatQualifiedName(left: string, right: string): string {
@@ -318,7 +328,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatObject(members: string[]): string {
-        return `array{ ${members.join(', ')} }`;
+        return `array`;
     }
 
     formatArray(type: string): string {

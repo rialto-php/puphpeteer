@@ -10,15 +10,15 @@ use Nesk\Rialto\Data\BasicResource;
  * @method bool ok()
  * @method float status()
  * @method string statusText()
- * @method array<string, string> headers()
- * @method \Nesk\Puphpeteer\Resources\SecurityDetails|null securityDetails()
+ * @method array|string[]|string[] headers()
+ * @method SecurityDetails|null securityDetails()
  * @method mixed buffer()
  * @method string text()
  * @method mixed json()
- * @method \Nesk\Puphpeteer\Resources\HTTPRequest request()
+ * @method HTTPRequest request()
  * @method bool fromCache()
  * @method bool fromServiceWorker()
- * @method \Nesk\Puphpeteer\Resources\Frame|null frame()
+ * @method Frame|null frame()
  */
 class HTTPResponse extends BasicResource
 {
