@@ -36,6 +36,7 @@ final class GenerateDocumentationCommand extends Command
      */
     private static function buildDocumentationGenerator(): void
     {
+        self::rmdirRecursive(self::BUILD_DIR);
         $process = new Process([
             self::NODE_MODULES_DIR.'/.bin/tsc',
             '--outDir',
@@ -174,5 +175,17 @@ final class GenerateDocumentationCommand extends Command
         }
 
         return 0;
+    }
+
+    private static function rmdirRecursive(string $dir): bool {
+        $files = scandir($dir);
+        if (!is_array($files)) {
+            return false;
+        }
+        $files = array_diff($files, array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? self::rmdirRecursive("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
     }
 }
