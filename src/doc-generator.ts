@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
+const callbackClass = '\\Nesk\\Rialto\\Data\\JsFunction';
 
 type ObjectMemberAsJson = { [key: string]: string; }
 
@@ -170,7 +171,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatAnonymousFunction(parameters: string, returnType: string): string {
-        return `JSHandle`;
+        return callbackClass;
     }
 
     formatFunction(name: string, parameters: string, returnType: string): string {
@@ -246,11 +247,11 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
 
         // Types ending with "Fn" are always callables or strings
         if (type.endsWith('Fn')) {
-            return this.formatUnion(['JSHandle', 'string']);
+            return this.formatUnion([callbackClass, 'string']);
         }
 
         if (type === 'Function') {
-            return 'JSHandle';
+            return callbackClass;
         }
 
         if (type === 'PuppeteerLifeCycleEvent') {
@@ -440,9 +441,15 @@ class DocumentationGenerator {
 
     private getParameterDeclarationAsString(node: ts.ParameterDeclaration): string {
         const name = this.getNamedDeclarationAsString(node);
-        const type = this.getTypeNodeAsString(node.type);
+        let type = this.getTypeNodeAsString(node.type);
         const isVariadic = node.dotDotDotToken !== undefined;
         const isOptional = node.questionToken !== undefined;
+
+        //fix missing argument type in evaluate* methods.
+        if (name.includes('Function') && type.includes('mixed')) {
+            type = this.formatter.formatTypeReference('Function');
+        }
+
         return this.formatter.formatParameter(name, type, isVariadic, isOptional);
     }
 

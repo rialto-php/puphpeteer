@@ -11,7 +11,7 @@ namespace Nesk\Puphpeteer\Resources;
  * @method Page newPage()
  * @method Target[] targets()
  * @method Target target()
- * @method Target waitForTarget(JSHandle $predicate, array $options = [])
+ * @method Target waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, array $options = [])
  * @method Page[] pages()
  * @method string version()
  * @method string userAgent()

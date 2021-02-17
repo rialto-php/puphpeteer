@@ -9,7 +9,7 @@ use Nesk\Rialto\Data\BasicResource;
  * @method mixed product()
  * @method string host()
  * @method bool canDownload(string $revision)
- * @method mixed download(string $revision, JSHandle $progressCallback = null)
+ * @method mixed download(string $revision, \Nesk\Rialto\Data\JsFunction $progressCallback = null)
  * @method string[] localRevisions()
  * @method void remove(string $revision)
  * @method mixed revisionInfo(string $revision)
