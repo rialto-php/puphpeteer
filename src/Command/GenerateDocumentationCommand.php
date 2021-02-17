@@ -155,7 +155,7 @@ final class GenerateDocumentationCommand extends Command
         }
 
         // Handle the specific Puppeteer class
-        $classDocumentation = $documentation['Puppeteer'] ?? null;
+        $classDocumentation = array_replace_recursive($documentation['Puppeteer'], $documentation['PuppeteerNode']);
         if ($classDocumentation !== null) {
             $phpDoc = self::generatePhpDocWithDocumentation($classDocumentation);
             if ($phpDoc !== null) {

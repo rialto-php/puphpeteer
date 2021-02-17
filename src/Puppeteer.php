@@ -3,6 +3,7 @@
 namespace Nesk\Puphpeteer;
 
 use Nesk\Puphpeteer\Resources\Browser;
+use Nesk\Puphpeteer\Resources\BrowserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 use Nesk\Rialto\AbstractEntryPoint;
@@ -11,11 +12,16 @@ use vierbergenlars\SemVer\{version, expression, SemVerException};
 /**
  * @property-read mixed devices
  * @property-read mixed errors
+ * @property-read string product
  * @method Browser connect(array $options)
  * @method void registerCustomQueryHandler(string $name, mixed $queryHandler)
  * @method void unregisterCustomQueryHandler(string $name)
  * @method string[] customQueryHandlerNames()
  * @method void clearCustomQueryHandlers()
+ * @method Browser launch(array $options = [])
+ * @method string executablePath()
+ * @method string[] defaultArgs(array $options = [])
+ * @method BrowserFetcher createBrowserFetcher(array $options)
  */
 class Puppeteer extends AbstractEntryPoint
 {
