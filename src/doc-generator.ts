@@ -120,7 +120,7 @@ class JsDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatGeneric(parentType: string, argumentTypes: string[], context?: TypeContext): string {
-        return `${parentType}|${argumentTypes.join('[]|')}[]`;
+        return `${parentType}<${argumentTypes.join(', ')}>`;
     }
 
     formatQualifiedName(left: string, right: string): string {
@@ -334,6 +334,60 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
 
     formatArray(type: string): string {
         return `${type}[]`;
+    }
+}
+
+class PhpStanDocumentationFormatter extends PhpDocumentationFormatter {
+    formatAnonymousFunction(parameters: string, returnType: string): string {
+        return `callable(${parameters}): ${returnType}|` + callbackClass;
+    }
+
+    formatTypeReference(type: string): string {
+        // Allow some specific JS classes to be used in phpDoc
+        if (PhpDocumentationFormatter.allowedJsClasses.includes(type)) {
+            return type;
+        }
+
+        // Prefix PHP resources with their namespace
+        if (this.resources.includes(type)) {
+            return this.resourcesNamespace ? `\\${this.resourcesNamespace}\\${type}` : type;
+        }
+
+        // If the type ends with "options" then convert it to an associative array
+        if (/options$/i.test(type)) {
+            return 'array<string, mixed>';
+        }
+
+        // Types ending with "Fn" are always callables or strings
+        if (type.endsWith('Fn')) {
+            return this.formatUnion([callbackClass, 'callable', 'string']);
+        }
+
+        if (type === 'Function') {
+            return this.formatUnion(['callable', callbackClass]);
+        }
+
+        if (type === 'PuppeteerLifeCycleEvent') {
+            return 'string';
+        }
+
+        if (type === 'Serializable') {
+            return this.formatUnion(['int', 'float', 'string', 'bool', 'null', 'array']);
+        }
+
+        if (type === 'SerializableOrJSHandle') {
+            return this.formatUnion([this.formatTypeReference('Serializable'), this.formatTypeReference('JSHandle')]);
+        }
+
+        if (type === 'HandleType') {
+            return this.formatUnion([this.formatTypeReference('JSHandle'), this.formatTypeReference('ElementHandle')]);
+        }
+
+        return 'mixed';
+    }
+
+    formatObject(members: string[]): string {
+        return `array{ ${members.join(', ')} }`;
     }
 }
 
@@ -588,6 +642,10 @@ switch (argv.language.toUpperCase()) {
     case 'PHP':
         supportChecker = new PhpSupportChecker();
         formatter = new PhpDocumentationFormatter(argv.resourcesNamespace, argv.resources);
+        break;
+    case 'PHPSTAN':
+        supportChecker = new PhpSupportChecker();
+        formatter = new PhpStanDocumentationFormatter(argv.resourcesNamespace, argv.resources);
         break;
     default:
         console.error(`Unsupported "${argv.language}" language.`);
