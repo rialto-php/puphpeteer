@@ -493,6 +493,12 @@ class DocumentationGenerator {
             : this.formatter.formatAnonymousFunction(parameters, returnType);
     }
 
+    private getEmptyFunctionSignatureAsString(
+        node: ts.ParenthesizedTypeNode
+    ): string {
+        return this.formatter.formatAnonymousFunction('', '');
+    }
+
     private getParameterDeclarationAsString(node: ts.ParameterDeclaration): string {
         const name = this.getNamedDeclarationAsString(node);
         let type = this.getTypeNodeAsString(node.type);
@@ -540,6 +546,8 @@ class DocumentationGenerator {
             return this.getArrayTypeNodeAsString(node, context);
         } else if (ts.isFunctionTypeNode(node)) {
             return this.getSignatureDeclarationBaseAsString(node);
+        } else if (ts.isParenthesizedTypeNode(node)) {
+            return this.getEmptyFunctionSignatureAsString(node);
         } else {
             throw new TypeNotSupportedError();
         }
