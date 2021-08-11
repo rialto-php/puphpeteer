@@ -28,6 +28,9 @@ class Puppeteer extends AbstractEntryPoint
 
         // Logs the output of Browser's console methods (console.log, console.debug, etc...) to the PHP logger
         'log_browser_console' => false,
+
+        //Custom js to load puppeteer-extra plugins
+        'js_extra' => ''
     ];
 
     /**

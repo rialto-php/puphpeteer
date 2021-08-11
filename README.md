@@ -156,6 +156,27 @@ try {
 
 Instead, a `Node\Exception` will be thrown, the Node process will stay alive and usable.
 
+### Puppeteer plugins
+
+To use puppeteer-extra plugins add them to your project:
+```shell
+npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+```
+
+Then override js inclusion with js_extra option
+```php
+    $puppeteer = new Puppeteer([
+        'js_extra' => /** @lang JavaScript */ "
+            const puppeteer = require('puppeteer-extra');
+            const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+            puppeteer.use(StealthPlugin());
+            instruction.setDefaultResource(puppeteer);
+        "
+    ]);
+```
+
+
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
