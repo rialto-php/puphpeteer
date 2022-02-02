@@ -11,6 +11,7 @@ use vierbergenlars\SemVer\{version, expression, SemVerException};
  * @property-read mixed devices
  * @property-read mixed errors
  * @method \Nesk\Puphpeteer\Resources\Browser connect(array<string, mixed> $options)
+ * @method \Nesk\Puphpeteer\Resources\Browser launch(array<string, mixed> $options)
  * @method void registerCustomQueryHandler(string $name, mixed $queryHandler)
  * @method void unregisterCustomQueryHandler(string $name)
  * @method string[] customQueryHandlerNames()
