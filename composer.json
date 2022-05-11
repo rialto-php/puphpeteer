@@ -31,10 +31,11 @@
         "symfony/console": "^4.0|^5.0|^6.0"
     },
     "repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/sietzekeuning/rialto"
-    },
+        {
+            "type": "vcs",
+            "url": "https://github.com/sietzekeuning/rialto"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Nesk\\Puphpeteer\\": "src/"
