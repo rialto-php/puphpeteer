@@ -21,7 +21,7 @@
     "require": {
         "php": ">=7.3",
         "nesk/rialto": "dev-dev",
-        "psr/log": "^1.0",
+        "psr/log": "^1.0|^2.0|^3.0",
         "vierbergenlars/php-semver": "^3.0.2"
     },
     "require-dev": {
