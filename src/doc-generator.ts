@@ -156,8 +156,8 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     static readonly allowedJsClasses = ['Promise', 'Record', 'Map'];
 
     constructor(
-        private readonly resourcesNamespace: string,
-        private readonly resources: string[],
+        protected readonly resourcesNamespace: string,
+        protected readonly resources: string[],
     ) {}
 
     formatProperty(name: string, type: string, context: MemberContext): string {
@@ -410,7 +410,7 @@ class DocumentationGenerator {
 
     private isNodeAccessible(node: ts.Node): boolean {
         // @ts-ignore
-        if (node.name && this.getNamedDeclarationAsString(node).startsWith('_')) {
+        if (node.name && (this.getNamedDeclarationAsString(node).startsWith('_') || this.getNamedDeclarationAsString(node).startsWith('#'))) {
             return false;
         }
 
@@ -496,7 +496,7 @@ class DocumentationGenerator {
     private getEmptyFunctionSignatureAsString(
         node: ts.ParenthesizedTypeNode
     ): string {
-        return this.formatter.formatAnonymousFunction('', '');
+        return this.formatter.formatAnonymousFunction(this.getTypeNodeAsString(node.type), '');
     }
 
     private getParameterDeclarationAsString(node: ts.ParameterDeclaration): string {
@@ -624,13 +624,13 @@ class DocumentationGenerator {
     }
 
     private getNamedDeclarationAsString(node: ts.NamedDeclaration): string {
-        if (!ts.isIdentifier(node.name)) {
+        if (!ts.isIdentifier(node.name) && !ts.isPrivateIdentifier(node.name)) {
             throw new TypeNotSupportedError();
         }
         return this.getIdentifierAsString(node.name);
     }
 
-    private getIdentifierAsString(node: ts.Identifier): string {
+    private getIdentifierAsString(node: ts.Identifier|ts.PrivateIdentifier): string {
         return String(node.escapedText);
     }
 }
