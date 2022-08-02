@@ -1,50 +1,50 @@
 {
-    "name": "nesk/puphpeteer",
-    "description": "A Puppeteer bridge for PHP, supporting the entire API.",
-    "keywords": [
-        "php",
-        "puppeteer",
-        "headless-chrome",
-        "testing",
-        "web",
-        "developer-tools",
-        "automation"
-    ],
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Johann Pardanaud",
-            "email": "pardanaud.j@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.3|^8.0",
-        "nesk/rialto": "^1.2.0",
-        "psr/log": "^1.0|^2.0|^3.0",
-        "vierbergenlars/php-semver": "^3.0.2"
-    },
-    "require-dev": {
-        "monolog/monolog": "^2.0",
-        "phpunit/phpunit": "^9.0",
-        "symfony/process": "^4.0|^5.0|^6.0",
-        "symfony/console": "^4.0|^5.0|^6.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Nesk\\Puphpeteer\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Nesk\\Puphpeteer\\Tests\\": "tests/"
-        }
-    },
-    "scripts": {
-        "post-install-cmd": "npm install",
-        "test": "./vendor/bin/phpunit"
-    },
-    "config": {
-        "sort-packages": true
+  "name": "ousid/puphpeteer",
+  "description": "A Puppeteer bridge for PHP, supporting the entire API.",
+  "keywords": [
+    "php",
+    "puppeteer",
+    "headless-chrome",
+    "testing",
+    "web",
+    "developer-tools",
+    "automation"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Johann Pardanaud",
+      "email": "pardanaud.j@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=7.3|^8.0",
+    "nesk/rialto": "^1.2.0",
+    "psr/log": "^1.0|^2.0|^3.0",
+    "vierbergenlars/php-semver": "^3.0.2"
+  },
+  "require-dev": {
+    "monolog/monolog": "^2.0",
+    "phpunit/phpunit": "^9.0",
+    "symfony/process": "^4.0|^5.0|^6.0",
+    "symfony/console": "^4.0|^5.0|^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nesk\\Puphpeteer\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Nesk\\Puphpeteer\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": "npm install",
+    "test": "./vendor/bin/phpunit"
+  },
+  "config": {
+    "sort-packages": true
+  }
 }
