@@ -1,3 +1,9 @@
+# 🚨 This project is not maintained anymore
+
+As I write these lines, it's been nearly two years since the latest release of PuPHPeteer. Despite the enthusiasm around this project, I no longer have the motivation to support its development, mainly because it never really had any use to me. So its time to be honest with you, PuPHPeteer is no longer maintained.
+
+If you create a fork and plan to maintain it, let me know and I will link it here.
+
 # PuPHPeteer
 
 <img src="https://user-images.githubusercontent.com/817508/100672192-dd258500-3361-11eb-845f-e8b5109752e4.png" style="max-width:100%;" width="190px" align="right">
