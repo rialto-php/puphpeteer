@@ -5,6 +5,7 @@ As I write these lines, it's been nearly two years since the latest release of P
 However, here's a list of forks maintained by the community:
 
 - [zoonru/puphpeteer](https://github.com/zoonru/puphpeteer)
+- [NigelCunningham/puphpeteer](https://github.com/NigelCunningham/puphpeteer)
 
 If you create a fork and plan to maintain it, let me know and I will link it here.
 
