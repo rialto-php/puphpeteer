@@ -1,7 +1,6 @@
 'use strict';
 
-const puppeteer = require('puppeteer'),
-    {ConnectionDelegate} = require('@nesk/rialto'),
+const {ConnectionDelegate} = require('@nesk/rialto'),
     Logger = require('@nesk/rialto/src/node-process/Logger'),
     ConsoleInterceptor = require('@nesk/rialto/src/node-process/NodeInterceptors/ConsoleInterceptor'),
     StandardStreamsInterceptor = require('@nesk/rialto/src/node-process/NodeInterceptors/StandardStreamsInterceptor');
@@ -28,7 +27,12 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate
      * @inheritdoc
      */
     async handleInstruction(instruction, responseHandler, errorHandler) {
-        instruction.setDefaultResource(puppeteer);
+        if (this.options.js_extra) {
+            eval(this.options.js_extra);
+        } else {
+            const puppeteer = require('puppeteer');
+            instruction.setDefaultResource(puppeteer);
+        }
 
         let value = null;
 
