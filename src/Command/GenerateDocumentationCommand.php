@@ -17,6 +17,9 @@ final class GenerateDocumentationCommand extends Command
     private const NODE_MODULES_DIR = __DIR__.'/../../node_modules';
     private const RESOURCES_DIR = __DIR__.'/../Resources';
     private const RESOURCES_NAMESPACE = 'Nesk\\Puphpeteer\\Resources';
+    private const DOC_FORMAT_PHP = 'php';
+    private const DOC_FORMAT_PHPSTAN = 'phpstan';
+    private const DOC_FORMATS = [self::DOC_FORMAT_PHP, self::DOC_FORMAT_PHPSTAN];
 
     protected static $defaultName = 'doc:generate';
 
@@ -36,6 +39,7 @@ final class GenerateDocumentationCommand extends Command
      */
     private static function buildDocumentationGenerator(): void
     {
+        self::rmdirRecursive(self::BUILD_DIR);
         $process = new Process([
             self::NODE_MODULES_DIR.'/.bin/tsc',
             '--outDir',
@@ -55,23 +59,35 @@ final class GenerateDocumentationCommand extends Command
         $commonFiles = \glob("$puppeteerPath/lib/esm/puppeteer/common/*.d.ts");
         $nodeFiles = \glob("$puppeteerPath/lib/esm/puppeteer/node/*.d.ts");
 
-        $process = new Process(
-            \array_merge(
-                ['node', self::BUILD_DIR.'/'.self::DOC_FILE_NAME.'.js', 'php'],
-                $commonFiles,
-                $nodeFiles,
-                ['--resources-namespace', self::RESOURCES_NAMESPACE, '--resources'],
-                $resourceNames
-            )
-        );
-        $process->mustRun();
+        $result = [];
+        foreach(self::DOC_FORMATS as $format) {
+            $process = new Process(
+                \array_merge(
+                    ['node', self::BUILD_DIR.'/'.self::DOC_FILE_NAME.'.js', $format],
+                    $commonFiles,
+                    $nodeFiles,
+                    ['--resources-namespace', self::RESOURCES_NAMESPACE, '--resources'],
+                    $resourceNames
+                )
+            );
+            $process->mustRun();
 
-        return \json_decode($process->getOutput(), true);
+            foreach (\json_decode($process->getOutput(), true) as &$class) {
+                $result[$class['name']]['name'] = $class['name'];
+                $result[$class['name']][$format] = [
+                    'properties' => $class['properties'],
+                    'getters' => $class['getters'],
+                    'methods' => $class['methods'],
+                ];
+            }
+        }
+
+        return $result;
     }
 
     private static function getResourceNames(): array
     {
-        return array_map(function (string $filePath): string {
+        return array_map(static function (string $filePath): string {
             return explode('.', \basename($filePath))[0];
         }, \glob(self::RESOURCES_DIR.'/*'));
     }
@@ -80,18 +96,23 @@ final class GenerateDocumentationCommand extends Command
     {
         $properties = array_map(function (string $property): string {
             return "\n * @property $property";
-        }, $classDocumentation['properties']);
+        }, $classDocumentation[self::DOC_FORMAT_PHP]['properties']);
         $properties = \implode('', $properties);
 
         $getters = array_map(function (string $getter): string {
             return "\n * @property-read $getter";
-        }, $classDocumentation['getters']);
+        }, $classDocumentation[self::DOC_FORMAT_PHP]['getters']);
         $getters = \implode('', $getters);
 
-        $methods = array_map(function (string $method): string {
-            return "\n * @method $method";
-        }, $classDocumentation['methods']);
-        $methods = \implode('', $methods);
+        $methods = '';
+        foreach ($classDocumentation[self::DOC_FORMAT_PHP]['methods'] as $pos => $method) {
+            $methods .= "\n * @method $method";
+
+            $phpStanMethod = $classDocumentation[self::DOC_FORMAT_PHPSTAN]['methods'][$pos];
+            //phpStorm works incorrectly if @phpstan-method is used.
+            //Using non-standard method-extended phpDoc:
+            $methods .= "\n * @method-extended $phpStanMethod";
+        }
 
         if (\strlen($properties) > 0 || \strlen($getters) > 0 || \strlen($methods) > 0) {
             return "/**$properties$getters$methods\n */";
@@ -155,7 +176,8 @@ final class GenerateDocumentationCommand extends Command
         }
 
         // Handle the specific Puppeteer class
-        $classDocumentation = $documentation['Puppeteer'] ?? null;
+        $classDocumentation = array_replace_recursive($documentation['Puppeteer'], $documentation['PuppeteerNode']);
+        unset($documentation['Puppeteer'], $documentation['PuppeteerNode']);
         if ($classDocumentation !== null) {
             $phpDoc = self::generatePhpDocWithDocumentation($classDocumentation);
             if ($phpDoc !== null) {
@@ -174,5 +196,17 @@ final class GenerateDocumentationCommand extends Command
         }
 
         return 0;
+    }
+
+    private static function rmdirRecursive(string $dir): bool {
+        $files = scandir($dir);
+        if (!is_array($files)) {
+            return false;
+        }
+        $files = array_diff($files, array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? self::rmdirRecursive("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
     }
 }

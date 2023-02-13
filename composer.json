@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": ">=7.3",
+        "ext-json": "*",
         "nesk/rialto": "^1.2.0",
         "psr/log": "^1.0",
         "vierbergenlars/php-semver": "^3.0.2"
@@ -42,7 +43,8 @@
     },
     "scripts": {
         "post-install-cmd": "npm install",
-        "test": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/phpunit",
+        "update-docs": "php bin/console doc:generate"
     },
     "config": {
         "sort-packages": true

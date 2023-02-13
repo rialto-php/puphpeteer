@@ -2,10 +2,12 @@
 
 namespace Nesk\Puphpeteer\Traits;
 
+use Nesk\Puphpeteer\Resources\ElementHandle;
+
 /**
  * @method ElementHandle|null querySelector(string $selector)
- * @method array<int, ElementHandle> querySelectorAll(string $selector)
- * @method array<int, ElementHandle> querySelectorXPath(string $expression)
+ * @method ElementHandle[] querySelectorAll(string $selector)
+ * @method ElementHandle[] querySelectorXPath(string $expression)
  */
 trait AliasesSelectionMethods
 {

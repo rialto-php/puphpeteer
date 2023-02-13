@@ -2,6 +2,8 @@
 
 namespace Nesk\Puphpeteer;
 
+use Nesk\Puphpeteer\Resources\Browser;
+use Nesk\Puphpeteer\Resources\BrowserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 use Nesk\Rialto\AbstractEntryPoint;
@@ -10,11 +12,25 @@ use vierbergenlars\SemVer\{version, expression, SemVerException};
 /**
  * @property-read mixed devices
  * @property-read mixed errors
- * @method \Nesk\Puphpeteer\Resources\Browser connect(array<string, mixed> $options)
+ * @property-read string product
+ * @method \Nesk\Puphpeteer\Resources\Browser connect(array $options)
+ * @method-extended \Nesk\Puphpeteer\Resources\Browser connect(array<string, mixed> $options)
  * @method void registerCustomQueryHandler(string $name, mixed $queryHandler)
+ * @method-extended void registerCustomQueryHandler(string $name, mixed $queryHandler)
  * @method void unregisterCustomQueryHandler(string $name)
+ * @method-extended void unregisterCustomQueryHandler(string $name)
  * @method string[] customQueryHandlerNames()
+ * @method-extended string[] customQueryHandlerNames()
  * @method void clearCustomQueryHandlers()
+ * @method-extended void clearCustomQueryHandlers()
+ * @method \Nesk\Puphpeteer\Resources\Browser launch(array $options = [])
+ * @method-extended \Nesk\Puphpeteer\Resources\Browser launch(array<string, mixed>&array{ product: mixed, extraPrefsFirefox: array|string[]|mixed[] } $options = null)
+ * @method string executablePath()
+ * @method-extended string executablePath()
+ * @method string[] defaultArgs(array $options = [])
+ * @method-extended string[] defaultArgs(array<string, mixed> $options = null)
+ * @method \Nesk\Puphpeteer\Resources\BrowserFetcher createBrowserFetcher(array $options)
+ * @method-extended \Nesk\Puphpeteer\Resources\BrowserFetcher createBrowserFetcher(array<string, mixed> $options)
  */
 class Puppeteer extends AbstractEntryPoint
 {

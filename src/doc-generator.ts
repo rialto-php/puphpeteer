@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
+const callbackClass = '\\Nesk\\Rialto\\Data\\JsFunction';
 
 type ObjectMemberAsJson = { [key: string]: string; }
 
@@ -155,8 +156,8 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     static readonly allowedJsClasses = ['Promise', 'Record', 'Map'];
 
     constructor(
-        private readonly resourcesNamespace: string,
-        private readonly resources: string[],
+        protected readonly resourcesNamespace: string,
+        protected readonly resources: string[],
     ) {}
 
     formatProperty(name: string, type: string, context: MemberContext): string {
@@ -170,7 +171,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatAnonymousFunction(parameters: string, returnType: string): string {
-        return `callable(${parameters}): ${returnType}`;
+        return callbackClass;
     }
 
     formatFunction(name: string, parameters: string, returnType: string): string {
@@ -182,7 +183,17 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
             type = type.slice(0, -2);
         }
 
-        const defaultValue = isOptional ? ' = null' : '';
+        let defaultValue;
+
+        switch (type) {
+            case 'array' :
+                defaultValue = isOptional ? ' = []' : '';
+                break;
+            default:
+                defaultValue = isOptional ? ' = null' : '';
+                break;
+        }
+
         return `${type} ${isVariadic ? '...' : ''}\$${name}${defaultValue}`;
     }
 
@@ -226,21 +237,21 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
 
         // Prefix PHP resources with their namespace
         if (this.resources.includes(type)) {
-            return `\\${this.resourcesNamespace}\\${type}`;
+            return this.resourcesNamespace ? `\\${this.resourcesNamespace}\\${type}` : type;
         }
 
         // If the type ends with "options" then convert it to an associative array
         if (/options$/i.test(type)) {
-            return 'array<string, mixed>';
+            return 'array';
         }
 
         // Types ending with "Fn" are always callables or strings
         if (type.endsWith('Fn')) {
-            return this.formatUnion(['callable', 'string']);
+            return this.formatUnion([callbackClass, 'string']);
         }
 
         if (type === 'Function') {
-            return 'callable';
+            return callbackClass;
         }
 
         if (type === 'PuppeteerLifeCycleEvent') {
@@ -278,7 +289,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
             parentType = 'array';
         }
 
-        return `${parentType}<${argumentTypes.join(', ')}>`;
+        return `${parentType}|${argumentTypes.join('[]|')}[]`;
     }
 
     formatQualifiedName(left: string, right: string): string {
@@ -318,11 +329,65 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatObject(members: string[]): string {
-        return `array{ ${members.join(', ')} }`;
+        return `array`;
     }
 
     formatArray(type: string): string {
         return `${type}[]`;
+    }
+}
+
+class PhpStanDocumentationFormatter extends PhpDocumentationFormatter {
+    formatAnonymousFunction(parameters: string, returnType: string): string {
+        return `callable(${parameters}): ${returnType}|` + callbackClass;
+    }
+
+    formatTypeReference(type: string): string {
+        // Allow some specific JS classes to be used in phpDoc
+        if (PhpDocumentationFormatter.allowedJsClasses.includes(type)) {
+            return type;
+        }
+
+        // Prefix PHP resources with their namespace
+        if (this.resources.includes(type)) {
+            return this.resourcesNamespace ? `\\${this.resourcesNamespace}\\${type}` : type;
+        }
+
+        // If the type ends with "options" then convert it to an associative array
+        if (/options$/i.test(type)) {
+            return 'array<string, mixed>';
+        }
+
+        // Types ending with "Fn" are always callables or strings
+        if (type.endsWith('Fn')) {
+            return this.formatUnion([callbackClass, 'callable', 'string']);
+        }
+
+        if (type === 'Function') {
+            return this.formatUnion(['callable', callbackClass]);
+        }
+
+        if (type === 'PuppeteerLifeCycleEvent') {
+            return 'string';
+        }
+
+        if (type === 'Serializable') {
+            return this.formatUnion(['int', 'float', 'string', 'bool', 'null', 'array']);
+        }
+
+        if (type === 'SerializableOrJSHandle') {
+            return this.formatUnion([this.formatTypeReference('Serializable'), this.formatTypeReference('JSHandle')]);
+        }
+
+        if (type === 'HandleType') {
+            return this.formatUnion([this.formatTypeReference('JSHandle'), this.formatTypeReference('ElementHandle')]);
+        }
+
+        return 'mixed';
+    }
+
+    formatObject(members: string[]): string {
+        return `array{ ${members.join(', ')} }`;
     }
 }
 
@@ -345,7 +410,7 @@ class DocumentationGenerator {
 
     private isNodeAccessible(node: ts.Node): boolean {
         // @ts-ignore
-        if (node.name && this.getNamedDeclarationAsString(node).startsWith('_')) {
+        if (node.name && (this.getNamedDeclarationAsString(node).startsWith('_') || this.getNamedDeclarationAsString(node).startsWith('#'))) {
             return false;
         }
 
@@ -428,11 +493,23 @@ class DocumentationGenerator {
             : this.formatter.formatAnonymousFunction(parameters, returnType);
     }
 
+    private getEmptyFunctionSignatureAsString(
+        node: ts.ParenthesizedTypeNode
+    ): string {
+        return this.formatter.formatAnonymousFunction(this.getTypeNodeAsString(node.type), '');
+    }
+
     private getParameterDeclarationAsString(node: ts.ParameterDeclaration): string {
         const name = this.getNamedDeclarationAsString(node);
-        const type = this.getTypeNodeAsString(node.type);
+        let type = this.getTypeNodeAsString(node.type);
         const isVariadic = node.dotDotDotToken !== undefined;
         const isOptional = node.questionToken !== undefined;
+
+        //fix missing argument type in evaluate* methods.
+        if (name.includes('Function') && type.includes('mixed')) {
+            type = this.formatter.formatTypeReference('Function');
+        }
+
         return this.formatter.formatParameter(name, type, isVariadic, isOptional);
     }
 
@@ -469,6 +546,8 @@ class DocumentationGenerator {
             return this.getArrayTypeNodeAsString(node, context);
         } else if (ts.isFunctionTypeNode(node)) {
             return this.getSignatureDeclarationBaseAsString(node);
+        } else if (ts.isParenthesizedTypeNode(node)) {
+            return this.getEmptyFunctionSignatureAsString(node);
         } else {
             throw new TypeNotSupportedError();
         }
@@ -545,13 +624,13 @@ class DocumentationGenerator {
     }
 
     private getNamedDeclarationAsString(node: ts.NamedDeclaration): string {
-        if (!ts.isIdentifier(node.name)) {
+        if (!ts.isIdentifier(node.name) && !ts.isPrivateIdentifier(node.name)) {
             throw new TypeNotSupportedError();
         }
         return this.getIdentifierAsString(node.name);
     }
 
-    private getIdentifierAsString(node: ts.Identifier): string {
+    private getIdentifierAsString(node: ts.Identifier|ts.PrivateIdentifier): string {
         return String(node.escapedText);
     }
 }
@@ -571,6 +650,10 @@ switch (argv.language.toUpperCase()) {
     case 'PHP':
         supportChecker = new PhpSupportChecker();
         formatter = new PhpDocumentationFormatter(argv.resourcesNamespace, argv.resources);
+        break;
+    case 'PHPSTAN':
+        supportChecker = new PhpSupportChecker();
+        formatter = new PhpStanDocumentationFormatter(argv.resourcesNamespace, argv.resources);
         break;
     default:
         console.error(`Unsupported "${argv.language}" language.`);

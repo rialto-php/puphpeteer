@@ -1,0 +1,9 @@
+parameters:
+    level: max
+    paths:
+        - src
+    fileExtensions:
+        - php
+    parallel:
+        maximumNumberOfProcesses: 4
+    tipsOfTheDay: false
