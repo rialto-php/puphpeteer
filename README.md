@@ -64,6 +64,28 @@ printf('Dimensions: %s', print_r($dimensions, true));
 $browser->close();
 ```
 
+**Example** - send post request:
+
+```php
+$puppeteer = new Puppeteer();
+$browser = $puppeteer->launch();
+$page = $browser->newPage();
+
+$page->setRequestInterception(true);
+$page->on('request', new JsFunction(
+    ['interceptedRequest'],
+    "
+    var data = {
+        'method': 'POST',
+        'postData': '" . http_build_query($options['form_params']) . "'
+    };
+    interceptedRequest.continue(data);
+    "
+));
+
+$response = $page->goto('https://example.com');
+```
+
 ## Requirements and installation
 
 This package requires PHP >= 7.3 and Node >= 8.
