@@ -151,7 +151,7 @@ $pageFunction = JsFunction::createWithParameters(['element'])
 
 ### Exceptions must be caught with `->tryCatch`
 
-If an error occurs in Node, a `Node\FatalException` will be thrown and the process closed, you will have to create a new instance of `Puppeteer`.
+If an error occurs in Node, a `Node\FatalException` will be thrown and the process closes, you will have to create a new instance of `Puppeteer`.
 
 To avoid that, you can ask Node to catch these errors by prepending your instruction with `->tryCatch`:
 
